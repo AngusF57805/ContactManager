@@ -12,4 +12,28 @@ class Contact {
 	
 	}
 
+	int getId () {
+		return id;
+	}
+
+	String getName () {
+		return name;
+	}
+
+	String getNotes () {
+		return notes;
+	}
+
+	void setId (int id) {
+		this.id = id;
+	}
+
+	void setName (String name) {
+		this.name = name;
+	}
+
+	void setNotes (String notes) {
+		this.notes = notes;
+	}
+
 }

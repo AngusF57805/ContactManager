@@ -9,20 +9,20 @@ public class TextFileManager {
 	//converted to method used by cave of programming [https://youtu.be/Sm9yoju1me0]
 	
 	// TODO add file path
-	private final String filePath = "~/Desktop/ContactsManagerSaveFile.txt";
+	private final String filePath = "/Users/angusfindlay/Desktop/ContactsManagerSaveFile.txt";
 	private File textFile;
 	private String contents = "";
 	
 	public TextFileManager () {
 		try {
-			SetUpTextFile ();
+			setUpTextFile ();
 		} catch (FileNotFoundException e) {
 			// throws an error if file is not found
 			e.printStackTrace();
 		}
 	}
 	
-	private void SetUpTextFile () throws FileNotFoundException {
+	private void setUpTextFile () throws FileNotFoundException {
 		textFile = new File (filePath);
 		
 		try {
@@ -34,7 +34,7 @@ public class TextFileManager {
 		}
 	}
 	
-	public String ReadTextFile() {
+	public String readTextFile() {
 		//set the contents string to nothing
 		contents = "";
 		Scanner sc;
@@ -55,10 +55,10 @@ public class TextFileManager {
 		return contents;
 	}
 	
-	public void WriteTextFile(String content) {
+	public void writeTextFile(String content, boolean additiveWrite) {
 		try {
 			//!TODO decide boolean (set to false for overwrite, true for additive)
-			FileWriter fw = new FileWriter(textFile.getAbsoluteFile(),true);
+			FileWriter fw = new FileWriter(textFile.getAbsoluteFile(), additiveWrite);
 			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write(content);
 			bw.close();

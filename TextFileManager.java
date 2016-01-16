@@ -35,24 +35,26 @@ public class TextFileManager {
 	
 	public String[] readTextFile() {
 		//set the contents
-		String[] contents = new String[5];
-		int i = 0;
+		String[] contents = new String[100];
 		Scanner sc;
 		try {
 			sc = new Scanner (textFile);
-			
+			contents = new String[getLineCount()];
+				
+			int i = 0;
 			while (sc.hasNextLine()) {
 				//cycle through the text file, adding it to contents
 				contents[i] = sc.nextLine();
 				i ++;
 			}
-			
+	
 			sc.close();			
+
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+	
 		return contents;
 	}
 	
@@ -61,7 +63,7 @@ public class TextFileManager {
 			// set additiveWrite to false for overwrite, true for additive)
 			FileWriter fw = new FileWriter(textFile.getAbsoluteFile(), additiveWrite);
 			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write(content + "\n");
+			bw.write(content);
 			bw.close();
 
 			System.out.println("Added '" + content + "' to the text file.");
@@ -82,5 +84,16 @@ public class TextFileManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public int getLineCount () {
+		int lines = 0;
+		try {
+			Scanner sc = new Scanner (textFile);
+			while (sc.hasNextLine() && lines < 100) lines ++;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return lines;
 	}
 }

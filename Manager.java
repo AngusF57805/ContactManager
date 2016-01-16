@@ -10,18 +10,20 @@ class Manager {
 
 	public static void main (String[] args) {
 		
-	       /*
-		* read file
-		* put contents into sets
-		* start ui stuff
-		* save afterwards
-		*/
+		/*
+		 * read file
+		 * put contents into sets
+		 * start ui stuff
+		 * save afterwards
+		 */
 		
 		initializeSets ();
 		createContacts ();
 		createMeetings ();
 
-		setUI (0);
+		print (readFile());
+
+		setUi (0);
 	
 	}
 
@@ -34,14 +36,14 @@ class Manager {
 		return sc.nextLine();
 	}
 
-	static void writeToFile (String str) {
+	static void writeToFile (String str, boolean additiveWrite) {
 		TextFileManager textReader = new TextFileManager ();
-		textReader.writeTextFile (str, true);
+		textReader.writeTextFile (str, additiveWrite);
 	}
 
 	static String readFile () {
 		TextFileManager textWriter = new TextFileManager ();
-		return textWriter.readTextFile ();
+		return textWriter.readTextFile ()[0];
 	}
 
 	static void initializeSets () {
@@ -50,20 +52,22 @@ class Manager {
 	}
 
 	static void flush () {
-		writeToFile (contacts.toString());
-		writeToFile (meetings.toString());
+		for (int i = 0; i < contacts.size(); i++) {
+			writeToFile (contacts.toString(), false);
+			writeToFile (meetings.toString(), true);
+		}
 	}
 
 	static void createContacts () {
-		contacts.add ();
+		contacts.add (new Contact ("Cam Higgin", "aka providencehd"));
 	}
 
 	static void createMeetings () {
-		meetings.add ();
+		meetings.add (new Meeting (new Date(), "test meeting"));
 	}
 
 
-	static void setUI (int page) {
+	static void setUi (int page) {
 
 		switch (page) {
 			case 0:
@@ -73,29 +77,27 @@ class Manager {
 				break;
 			case 1:
 				print ("Here are the contacts you have");
-				print (readFile ());
+				print (contacts.toString());
+				setUi (0);
 				break;
 			
 			default:
 				print ("no ui page exists");
-				setUI (0);
+				setUi (0);
 				break;
 		}
 	}
 
 	static void checkInput (int page) {
-
 		switch (page) {
 			case 0:
 				switch (readScreen ()) {
 					case "list":
-						setUI (1);
+						setUi (1);
 						break;
 					case "quit":
-						flush:
-						//System.exit(0);
+						flush ();
 						return;
-						break;
 					default:
 						print ("unknown command - type help for a list of commands");
 						break;

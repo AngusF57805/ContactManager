@@ -11,7 +11,6 @@ public class TextFileManager {
 	// TODO add file path
 	private final String filePath = "/Users/angusfindlay/Desktop/ContactsManagerSaveFile.txt";
 	private File textFile;
-	private String contents = "";
 	
 	public TextFileManager () {
 		try {
@@ -34,16 +33,18 @@ public class TextFileManager {
 		}
 	}
 	
-	public String readTextFile() {
-		//set the contents string to nothing
-		contents = "";
+	public String[] readTextFile() {
+		//set the contents
+		String[] contents = new String[5];
+		int i = 0;
 		Scanner sc;
 		try {
 			sc = new Scanner (textFile);
 			
 			while (sc.hasNextLine()) {
 				//cycle through the text file, adding it to contents
-				contents += sc.nextLine() + "\n";
+				contents[i] = sc.nextLine();
+				i ++;
 			}
 			
 			sc.close();			
@@ -57,13 +58,13 @@ public class TextFileManager {
 	
 	public void writeTextFile(String content, boolean additiveWrite) {
 		try {
-			//!TODO decide boolean (set to false for overwrite, true for additive)
+			// set additiveWrite to false for overwrite, true for additive)
 			FileWriter fw = new FileWriter(textFile.getAbsoluteFile(), additiveWrite);
 			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write(content);
+			bw.write(content + "\n");
 			bw.close();
 
-			System.out.println("Added '" + content + "' to the text file.\n");
+			System.out.println("Added '" + content + "' to the text file.");
 
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -4,12 +4,15 @@ class Contact {
 	String name;
 	String notes;
 
-	Contact (String name, String notes) {
-
-		id = 100;
+	public Contact (int id, String name, String notes) {
+		this.id = id;
 		this.name = name;
 		this.notes = notes;
-	
+	}
+
+	public Contact (String name, String notes) {
+		//TODO make the id stuff work
+		this (100, name, notes);
 	}
 
 	int getId () {

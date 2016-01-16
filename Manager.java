@@ -1,7 +1,8 @@
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Scanner;
+import java.util.Date;
 import java.util.*;
-//TODO only import relevent stuff
-//import java.util.Set;
-//import java.util.Scanner;
 
 class Manager {
 
@@ -56,15 +57,14 @@ class Manager {
 
 	static void flush () {
 		clearFile ();
-		for (int i = 0; i < 10; i ++) {
+		for (int i = 0; i < 1; i ++) {
 			writeToFile(findContact(i).toString(), true);
 		}
 	}
 
 	static void createContacts () {
 		int i = 0;		
-			contacts.add (new Contact (readFile (i + 1), readFile (i + 2)));
-		
+			contacts.add (new Contact (Integer.parseInt(readFile (i)), readFile (i + 1), readFile (i + 2)));
 	}
 
 	static void createMeetings () {
@@ -112,6 +112,7 @@ class Manager {
 						setUi (0);
 						break;
 				}
+
 				break;
 			default:
 				print ("appliacation tried to switch to a page that does not exist!");

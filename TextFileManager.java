@@ -70,4 +70,17 @@ public class TextFileManager {
 			e.printStackTrace();
 		}
 	}
+
+	public void clearTextFile() {
+		try {
+			// set additiveWrite to false for overwrite, true for additive)
+			FileWriter fw = new FileWriter(textFile.getAbsoluteFile(), false);
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write("");
+			bw.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

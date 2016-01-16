@@ -21,8 +21,6 @@ class Manager {
 		createContacts ();
 		createMeetings ();
 
-		print (readFile());
-
 		setUi (0);
 	
 	}
@@ -41,9 +39,14 @@ class Manager {
 		textReader.writeTextFile (str, additiveWrite);
 	}
 
-	static String readFile () {
+	static String readFile (int n) {
 		TextFileManager textWriter = new TextFileManager ();
-		return textWriter.readTextFile ()[0];
+		return textWriter.readTextFile ()[n];
+	}
+
+	static void clearFile () {
+		TextFileManager textWriter = new TextFileManager ();
+		textWriter.clearTextFile ();
 	}
 
 	static void initializeSets () {
@@ -52,20 +55,25 @@ class Manager {
 	}
 
 	static void flush () {
-		for (int i = 0; i < contacts.size(); i++) {
-			writeToFile (contacts.toString(), false);
-			writeToFile (meetings.toString(), true);
+		clearFile ();
+		for (int i = 0; i < 10; i ++) {
+			writeToFile(findContact(i).toString(), true);
 		}
 	}
 
 	static void createContacts () {
-		contacts.add (new Contact ("Cam Higgin", "aka providencehd"));
+		int i = 0;		
+			contacts.add (new Contact (readFile (i + 1), readFile (i + 2)));
+		
 	}
 
 	static void createMeetings () {
 		meetings.add (new Meeting (new Date(), "test meeting"));
 	}
 
+	static Contact findContact (int n) {
+		return contacts.toArray(new Contact[contacts.size()])[n];
+	}	
 
 	static void setUi (int page) {
 
@@ -76,11 +84,12 @@ class Manager {
 				checkInput (page);
 				break;
 			case 1:
-				print ("Here are the contacts you have");
-				print (contacts.toString());
+				print ("LIST OF CONTACTS:");
+				for (int i = 0; i < 1 ; i ++) {
+					print (findContact(i).id +  " : " + findContact(i).name + " : " + findContact(i).notes);
+				}
 				setUi (0);
 				break;
-			
 			default:
 				print ("no ui page exists");
 				setUi (0);
@@ -100,6 +109,7 @@ class Manager {
 						return;
 					default:
 						print ("unknown command - type help for a list of commands");
+						setUi (0);
 						break;
 				}
 				break;

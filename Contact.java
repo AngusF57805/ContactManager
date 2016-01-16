@@ -6,7 +6,7 @@ class Contact {
 
 	Contact (String name, String notes) {
 
-		id = 0;
+		id = 100;
 		this.name = name;
 		this.notes = notes;
 	
@@ -34,6 +34,10 @@ class Contact {
 
 	void setNotes (String notes) {
 		this.notes = notes;
+	}
+
+	public String toString () {
+		return id + "\n" + name + "\n" + notes;
 	}
 
 }

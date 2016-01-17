@@ -62,7 +62,7 @@ class Manager {
 	static void createContacts () {
 		TextFileManager tm = new TextFileManager ();
 		print (tm.getLineCount() + " = linecount");
-		for (int i = 0; i < 3 /*tm.getLineCount()*/; i += 3) {
+		for (int i = 0; i < 6 /*tm.getLineCount()*/; i += 3) {
 			contacts.add (new Contact (Integer.parseInt(/*tm.readTextFile ()[i])*/"10"), tm.readTextFile ()[i + 1], tm.readTextFile ()[i + 2]));
 		}
 	}

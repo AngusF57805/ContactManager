@@ -2,6 +2,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.LineNumberReader;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -87,13 +89,25 @@ public class TextFileManager {
 	}
 
 	public int getLineCount () {
-		int lines = 0;
 		try {
-			Scanner sc = new Scanner (textFile);
-			while (sc.hasNextLine() && lines < 100) lines ++;
+			int lines = 0;
+
+			FileReader fr = new FileReader(textFile);
+			LineNumberReader lnr = new LineNumberReader(fr);
+
+			while (lnr.readLine() != null){
+				lines ++;
+			}
+
+			lnr.close();
+
+			return lines;
+			
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			//not 100% sure why this is in here
 		}
-		return lines;
+		return 0;
 	}
 }

@@ -61,9 +61,8 @@ class Manager {
 
 	static void createContacts () {
 		TextFileManager tm = new TextFileManager ();
-		print (tm.getLineCount() + " = linecount");
-		for (int i = 0; i < 6 /*tm.getLineCount()*/; i += 3) {
-			contacts.add (new Contact (Integer.parseInt(/*tm.readTextFile ()[i])*/"10"), tm.readTextFile ()[i + 1], tm.readTextFile ()[i + 2]));
+		for (int i = 0; i < tm.getLineCount(); i += 3) {
+			contacts.add (new Contact (Integer.parseInt(tm.readTextFile ()[i]), tm.readTextFile ()[i + 1], tm.readTextFile ()[i + 2]));
 		}
 	}
 

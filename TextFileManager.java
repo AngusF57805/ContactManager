@@ -11,8 +11,9 @@ public class TextFileManager {
 	//converted to method used by cave of programming [https://youtu.be/Sm9yoju1me0]
 	
 	// TODO add file path
-	private final String filePath = "/Users/angusfindlay/Desktop/ContactsManagerSaveFile.txt";
 	private File textFile;
+	private final String filename = "ContactsManagerSaveFile.txt";
+	private final String filePath = System.getProperty("user.dir") + File.separator + filename; 
 	
 	public TextFileManager () {
 		try {

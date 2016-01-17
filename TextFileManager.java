@@ -10,24 +10,16 @@ import java.util.Scanner;
 public class TextFileManager {
 	//converted to method used by cave of programming [https://youtu.be/Sm9yoju1me0]
 	
-	// TODO add file path
 	private File textFile;
+	//what the file should be called
 	private final String filename = "ContactsManagerSaveFile.txt";
+	//converted into a path that will work on any os / user
 	private final String filePath = System.getProperty("user.dir") + File.separator + filename; 
 	
 	public TextFileManager () {
+		//just sets up the textfile
 		try {
-			setUpTextFile ();
-		} catch (FileNotFoundException e) {
-			// throws an error if file is not found
-			e.printStackTrace();
-		}
-	}
-	
-	private void setUpTextFile () throws FileNotFoundException {
-		textFile = new File (filePath);
-		
-		try {
+			textFile = new File (filePath);
 			if (!textFile.exists()) {
 				textFile.createNewFile();
 			}
@@ -38,17 +30,14 @@ public class TextFileManager {
 	
 	public String[] readTextFile() {
 		//set the contents
-		String[] contents = new String[100];
-		Scanner sc;
+		String[] contents = new String[getLineCount()];
+		
 		try {
-			sc = new Scanner (textFile);
-			contents = new String[getLineCount()];
-				
-			int i = 0;
-			while (sc.hasNextLine()) {
+			Scanner sc = new Scanner (textFile);
+			
+			for (int i = 0; i < getLineCount(); i ++) {
 				//cycle through the text file, adding it to contents
 				contents[i] = sc.nextLine();
-				i ++;
 			}
 	
 			sc.close();			
@@ -77,16 +66,8 @@ public class TextFileManager {
 	}
 
 	public void clearTextFile() {
-		try {
-			// just overwrites the text file with nothing
-			FileWriter fw = new FileWriter(textFile.getAbsoluteFile(), false);
-			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write("");
-			bw.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		//just overwrites the text file with an empty string
+		writeTextFile("", false);
 	}
 
 	public int getLineCount () {
@@ -100,15 +81,16 @@ public class TextFileManager {
 				lines ++;
 			}
 
-			lnr.close();
+			lnr.close();// does this close fr too?
 
 			return lines;
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			//not 100% sure why this is in here
+			//not 100% sure what to put here
 		}
+		
 		return 0;
 	}
 }

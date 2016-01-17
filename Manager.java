@@ -85,7 +85,7 @@ class Manager {
 			case 1:
 				print ("LIST OF CONTACTS:\n");
 				for (int i = 0; i < contacts.size(); i ++) {
-					print (findContact(i).id +  " : " + findContact(i).name + " : " + findContact(i).notes + "\n");
+					print ("- " + findContact(i).id +  " : " + findContact(i).name + " : " + findContact(i).notes + "\n");
 				}
 				setUi (0);
 				break;

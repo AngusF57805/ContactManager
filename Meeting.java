@@ -3,19 +3,19 @@ import java.util.Date;
 import java.util.*;
 
 class Meeting {
-	
+
 	int id;
 	Date date;
 	String notes;
 	Set<Contact> attendees;
-
+	
 	Meeting (Date date, String notes) {
 		//for now no way to put contacts in a meeting via the constructor
 		attendees = new HashSet<Contact>();
 		this.date = date;
 		this.notes = notes;
 	}
-	
+
 	int getId () {
 		return id;
 	}

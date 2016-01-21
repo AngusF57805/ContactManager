@@ -11,26 +11,16 @@ class Manager {
 	static String tempName;
 
 	public static void main (String[] args) {
-		
-		/*
-		 * read file
-		 * put contents into sets
-		 * start ui stuff
-		 * save afterwards
-		 */
-		
-		initializeSets ();
-		createContacts ();
-		createMeetings ();
-
-		setUi (0);
-	
+		initializeSets (); //initialize the contacts/ meetings HashSets
+		createContacts (); //from text file
+		createMeetings (); //from text file
+		setUi (0); //home page
 	}
 
 	static void print (String str) {
 		System.out.print(str);
-	} 
-	
+	}
+
 	static String readScreen () {
 		Scanner sc = new Scanner (System.in);
 		return sc.nextLine();
@@ -72,7 +62,7 @@ class Manager {
 
 	static Contact findContact (int n) {
 		return contacts.toArray(new Contact[contacts.size()])[n];
-	}	
+	}
 
 	static void setUi (int page) {
 
@@ -111,13 +101,28 @@ class Manager {
 		switch (page) {
 			case 0:
 				switch (readScreen ()) {
-					case "list":
+					case "list": //list
 						setUi (1);
 						break;
-					case "add contact":
+					case "add contact"://add contact
 						setUi (2);
 						break;
-					case "quit":
+					case "edit contact"://edit contact
+						setUi (3);
+						break;
+					case "find contact"://find contact
+						setUi (4);
+						break;
+					case "add meeting"://add meeting
+						setUi (5);
+						break;
+					case "edit meeting"://edit meeting
+						setUi (6);
+						break;
+					case "find meeting"://find meeting
+						setUi (7);
+						break;
+					case "quit"://quit
 						flush ();
 						return;
 					default:

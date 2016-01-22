@@ -1,3 +1,5 @@
+package ContactManager;
+
 class Contact {
 
 	private int id;

@@ -1,3 +1,5 @@
+package ContactManager;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,9 +14,9 @@ public class TextFileManager {
 	
 	private File textFile;
 	//what the file should be called
-	private final String filename = "ContactsManagerSaveFile.txt";
+	private final String filename = "SaveFile.txt";
 	//converted into a path that will work on any os / user
-	private final String filePath = System.getProperty("user.dir") + File.separator + filename; 
+	private final String filePath = System.getProperty("user.dir") + File.separator + "ContactManager" +  File.separator + filename; 
 	
 	public TextFileManager () {
 		//just sets up the textfile

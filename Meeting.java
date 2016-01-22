@@ -4,47 +4,55 @@ import java.util.*;
 
 class Meeting {
 
-	int id;
-	Date date;
-	String notes;
-	Set<Contact> attendees;
-	
-	Meeting (Date date, String notes) {
+	private int id;
+	private Date date;
+	private String notes;
+	private Set<Contact> attendees;
+
+	public Meeting (Date date, String notes) {
 		//for now no way to put contacts in a meeting via the constructor
-		attendees = new HashSet<Contact>();
 		this.date = date;
 		this.notes = notes;
+		attendees = new HashSet<Contact>();
 	}
 
-	int getId () {
+	public int getId () {
 		return id;
 	}
 
-	Date getDate () {
+	public Date getDate () {
 		return date;
 	}
 
-	String getNotes () {
+	public String getNotes () {
 		return notes;
 	}
 
-	Set<Contact> getAttendees () {
+	public Set<Contact> getAttendees () {
 		return attendees;
 	}
 
-	void setDate (Date date) {
+	public void setDate (Date date) {
 		this.date = date;
 	}
 
-	void setNotes (String notes) {
+	public void setNotes (String notes) {
 		this.notes = notes;
 	}
 
-	void setAttendees (Set<Contact> attendees) {
+	public void setAttendees (Set<Contact> attendees) {
 		this.attendees = attendees;
 	}
 
-	void addAttendees (Contact contact) {
+	public void addAttendees (Contact contact) {
 		attendees.add (contact);
+	}
+
+	public String toString() { //overrides deafult .toString
+		return id + "\n" + date.toString() + "\n" + notes; //TODO AGGGGHHH
+	}
+
+	public String toFancyString() { //more ui friendly
+		return "- " + id +  " : " + date.toString() + " : " + notes + "\n"; //TODO WHAT DO I DO TO SHOW ATTENDEES
 	}
 }

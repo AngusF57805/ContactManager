@@ -32,7 +32,7 @@ class Manager {
 		Scanner sc = new Scanner(System.in);
 		return sc.nextLine();
 	}
-	
+
 	static void writeToFile(String str, boolean additiveWrite) {
 		TextFileManager tm = new TextFileManager();
 		tm.writeTextFile(str, additiveWrite);
@@ -50,10 +50,18 @@ class Manager {
 
 	static void flush() {
 		clearFile();
+		//flush contacts
 		for (int i = 0; i < contacts.size(); i ++) {
 			writeToFile(findContact(i).toString(), true);
+			//write a new line (unless it is the last contact)
 			if (i != contacts.size() - 1) writeToFile("\n", true);
 		}
+		//TODO flush meetings
+		/*for (int i = 0; i < meetings.size(); i ++) {
+			writeToFile(findMeeting(i).toString(), true);
+			//write a new line (unless it is the last contact)
+			if (i != meeeting.size() - 1) writeToFile("\n", true);
+		}*/
 	}
 
 	static void createContacts() {
@@ -64,30 +72,47 @@ class Manager {
 	}
 
 	static void createMeetings() {
+		//TODO create meetings from the text file into the hashset
 		meetings.add(new Meeting(new Date(), "test meeting"));
 	}
 
-	static Contact findContact(int n) {//find a contact based on an array position
+	//find a contact based on an array position
+	static Contact findContact(int n) {
 		return contacts.toArray(new Contact[contacts.size()])[n];
 	}
 
+	//find a contact based on an array position
+	static Contact findMeeting(int n) {
+		return meetings.toArray(new Contact[meetings.size()])[n];
+	}
+
+	//search for an id in contacts
 	static Contact searchContacts(int id) {
 		for (Contact contact : contacts) {
 			if (contact.getId() == id) {
 				return contact;
-			}	
+			}
 		}
 		return null;//TODO fix this, its super bad
 	}
 
 	static Contact searchContacts(String name) {
+		//;
 		for (Contact contact : contacts) {
-			if (contact.getName().equals(name)) {
+			if (contact.getName().toLowerCase().equals(name.toLowerCase())) {
+				//result.concat(contact);
 				return contact;
 			}
 		}
-		return null; //TODO ditto
+		return null;
+		//return result; //TODO ditto + multiple contacts return
 	}
+
+	//TODO
+	static Contact searchMeetings(int id) {return null;}
+
+	//TODO
+	static Contact searchMeetings(String name) {return null;}
 
 	static void setUi(Page page) {
 
@@ -100,7 +125,7 @@ class Manager {
 			case LISTC://list c
 				print("LIST OF CONTACTS:\n");
 				for (int i = 0; i < contacts.size(); i ++) {
-					print("- " + findContact(i).id +  " : " + findContact(i).name + " : " + findContact(i).notes + "\n");
+					print(findContact(i).toFancyString());
 				}
 				setUi(Page.HOME);
 				break;
@@ -206,6 +231,10 @@ class Manager {
 					case "find meeting"://find m
 						setUi(Page.FINDM);
 						break;
+					case "help"://help - shows all commands in a super long string >>>
+						print ("Here are all the commands:\n\nlist contacts\nadd contact\nedit contact\nremove contact\nfind contact\n\nlist meetings\nadd meeting\nedit meeting\nremove meeting\nfind meeting\nview meeting\nadd to meeting\nremove from meeting\n\nquit\nhelp\n");
+						setUi (Page.HOME);
+						break;
 					case "quit"://quit
 						flush();
 						return;
@@ -216,7 +245,7 @@ class Manager {
 				}
 
 				break;
-			case ADDC_1: 
+			case ADDC_1:
 				tempName = readScreen();
 				break;
 			case ADDC_2:
@@ -233,7 +262,8 @@ class Manager {
 				contacts.add(new Contact(tempId, tempName, readScreen()));
 				break;
 			case FINDC:
-				print(searchContacts(readScreen()).toString());
+				print(searchContacts(readScreen()).toFancyString());
+				break;
 			/*case Page.:
 				break;
 			case Page.:

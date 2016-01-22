@@ -1,8 +1,8 @@
 class Contact {
 
-	int id;
-	String name;
-	String notes;
+	private int id;
+	private String name;
+	private String notes;
 
 	public Contact(int id, String name, String notes) {
 		this.id = id;
@@ -15,32 +15,35 @@ class Contact {
 		this (100, name, notes);
 	}
 
-	int getId() {
+	public int getId() {
 		return id;
 	}
 
-	String getName() {
+	public String getName() {
 		return name;
 	}
 
-	String getNotes() {
+	public String getNotes() {
 		return notes;
 	}
 
-	void setId(int id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	void setName(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 
-	void setNotes(String notes) {
+	public void setNotes(String notes) {
 		this.notes = notes;
 	}
 
-	public String toString() {
+	public String toString() { //for writing to the text file (overrides toString)
 		return id + "\n" + name + "\n" + notes;
 	}
 
+	public String toFancyString() { //for list contact
+		return "- " + id +  " : " + name + " : " + notes + "\n";
+	}
 }

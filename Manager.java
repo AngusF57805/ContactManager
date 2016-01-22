@@ -13,8 +13,9 @@ class Manager {
 
 	static enum Page {
 		HOME,
-		LISTC, ADDC_1, ADDC_2, EDITC_1, EDITC_2, EDITC_3, FINDC,
-		LISTM, ADDM_1, ADDM_2, EDITM_1, EDITM_2, EDITM_3, FINDM
+		LISTC, ADDC_1, ADDC_2, EDITC_1, EDITC_2, EDITC_3, DELC, FINDC,
+		LISTM, ADDM_1, ADDM_2, EDITM_1, EDITM_2, EDITM_3, DELC, FINDM,
+		VIEWM, ADDTOM, DELFROMM
 	}
 
 	public static void main(String[] args) {
@@ -156,6 +157,12 @@ class Manager {
 				print("Contact '" + tempName + "' edited.\n");
 				setUi(Page.HOME);
 				break;
+			case DELC:
+				print ("type the id of the contact you want to delete:");
+				//serachy fgor id
+				//remove/
+				print ()
+				break;
 			case FINDC://search for a contact
 				print("type the name of the contact you want to search for:");
 				checkInput(page);
@@ -232,7 +239,7 @@ class Manager {
 						setUi(Page.FINDM);
 						break;
 					case "help"://help - shows all commands in a super long string >>>
-						print ("Here are all the commands:\n\nlist contacts\nadd contact\nedit contact\nremove contact\nfind contact\n\nlist meetings\nadd meeting\nedit meeting\nremove meeting\nfind meeting\nview meeting\nadd to meeting\nremove from meeting\n\nquit\nhelp\n");
+						print ("Here are all the commands:\n\nlist contacts\nadd contact\nedit contact\nremove contact\nfind contact\n\nlist meetings\nadd meeting\nedit meeting\nremove meeting\nfind meeting\nview meeting\nadd to meeting\nremove from meeting\n\nquit\nhelp\n\n");
 						setUi (Page.HOME);
 						break;
 					case "quit"://quit

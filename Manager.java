@@ -161,7 +161,7 @@ class Manager {
 				print ("type the id of the contact you want to delete:");
 				//serachy fgor id
 				//remove/
-				print ()
+				print ("contact deleted");
 				break;
 			case FINDC://search for a contact
 				print("type the name of the contact you want to search for:");

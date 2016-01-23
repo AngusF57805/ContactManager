@@ -15,10 +15,6 @@ class Manager {
 	static int tempId;
 
 	static enum Page {
-		HOME,
-		LISTC, ADDC_1, ADDC_2, EDITC_1, EDITC_2, EDITC_3, DELC, FINDC,
-		LISTM, ADDM_1, ADDM_2, EDITM_1, EDITM_2, EDITM_3, DELM, FINDM,
-		VIEWM, ADDTOM_1, ADDTOM_2, DELFROMM
 		/* enum which stores all the possible pages of the ui
 		 * HOME - main / welcome menu
 		 * LIST - display contents of the hashset
@@ -30,6 +26,10 @@ class Manager {
 		 * ADDTOM - adds to a meeting
 		 * DELFROMM - deletes from m
 		 */
+		HOME,
+		LISTC, ADDC_1, ADDC_2, EDITC_1, EDITC_2, EDITC_3, DELC, FINDC,
+		LISTM, ADDM_1, ADDM_2, EDITM_1, EDITM_2, EDITM_3, DELM, FINDM,
+		VIEWM, ADDTOM_1, ADDTOM_2, DELFROMM
 	}
 
 	public static void main(String[] args) {

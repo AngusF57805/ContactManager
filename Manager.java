@@ -33,9 +33,8 @@ class Manager {
 	}
 
 	public static void main(String[] args) {
-		initializeSets(); //initialize the contacts/ meetings HashSets
-		createContacts(); //from text file
-		createMeetings(); //from text file
+		initializeSets(); //initialize the contacts / meetings HashSets TODO remove?
+		fillSets(); //from text file
 		setUi(Page.HOME); //home page
 	}
 
@@ -79,16 +78,20 @@ class Manager {
 		}*/
 	}
 
-	static void createContacts() {
+	static void fillSets() {
 		TextFileManager tm = new TextFileManager();
-		for (int i = 0; i < tm.getLineCount(); i += 3) {
-			contacts.add(new Contact(Integer.parseInt(tm.readTextFile()[i]), tm.readTextFile()[i + 1], tm.readTextFile()[i + 2]));
-		}
-	}
+		int i = 0;
 
-	static void createMeetings() {
-		//TODO create meetings from the text file into the hashset
-		meetings.add(new Meeting(new Date(), "test meeting"));
+		print ("DONE");	
+		while (!tm.readTextFile()[i].equals("*END-CONTACTS*")) {
+			contacts.add(new Contact(Integer.parseInt(tm.readTextFile()[i]), tm.readTextFile()[i + 1], tm.readTextFile()[i + 2]));
+			i += 3;
+		}
+
+		//TODO is a for loop with i=i bad?
+		for (i = i + 1; i < tm.getLineCount(); i += 3) {
+			meetings.add(new Meeting(new Date(), tm.readTextFile()[i + 1], tm.readTextFile()[i + 2]));
+		}
 	}
 
 	//find a contact based on an array position
@@ -132,49 +135,61 @@ class Manager {
 	static void setUi(Page page) {
 
 		switch (page) {
-			case HOME://home
+			case HOME://main menu
 				print("Welcome to the Contacts Manager, what would you like to do?\n");
 				//get input
 				checkInput(page);
 				break;
-			case LISTC://list c
-				print("LIST OF CONTACTS:\n");
-				for (int i = 0; i < contacts.size(); i ++) {
-					print(findContact(i).toFancyString());
+			case LISTC://list all contacts
+				if (contacts.size () < 1) {
+					print("No contacts found\n");
+				} else {
+					print("LIST OF CONTACTS:\n");
+					for (int i = 0; i < contacts.size(); i ++) {
+						print(findContact(i).toFancyString());
+					}
 				}
 				setUi(Page.HOME);
 				break;
-			case ADDC_1://add c - 1
+			case ADDC_1://add contact part 1
 				print("type the FULL NAME of the contact:");
-				checkInput(page);
+				tempName = readScreen();
 				setUi(Page.ADDC_2);
 				break;
-			case ADDC_2://add c - 2
+			case ADDC_2://add contact part 2
 				print("type any NOTES about this person:");
-				checkInput(page);
+				contacts.add(new Contact(tempName, readScreen()));
 				print("Contact '" + tempName + "' added!\n");
 				setUi(Page.HOME);
 				break;
 			case EDITC_1://edit c - 1
 				print("type the id of the contact you want to edit:");
-				checkInput(page);
+				tempId = Integer.parseInt(readScreen());
 				setUi(Page.EDITC_2);
 				break;
 			case EDITC_2://edit c - 2
 				print("type the new FULL NAME of the contact (leave blank to not change):");
-				checkInput(page);
+				tempName = readScreen();
+				if (tempName.equals("") || tempName == null) {
+					tempName = searchContacts(tempId).getName();
+				}
 				setUi(Page.EDITC_3);
 				break;
 			case EDITC_3://edit c - 3
 				print("type any new NOTES about the contact (leave blank to not change):");
-				checkInput(page);
+				String tempNotes = readScreen();
+				if (tempNotes.equals("") || tempNotes == null) {
+					tempNotes = searchContacts(tempId).getNotes();
+				}
+				contacts.remove(searchContacts(tempId));
+				contacts.add(new Contact(tempId, tempName, tempNotes));
 				print("Contact '" + tempName + "' edited.\n");
 				setUi(Page.HOME);
 				break;
 			case DELC:
 				print ("type the id of the contact you want to delete:");
 				//get id
-				checkInput(page);
+				tempId = Integer.parseInt(readScreen());
 				//remove the contact (this way around so the name can be printed before it was deleted)
 				print ("removed contact '" + searchContacts(tempId).toFancyString());
 				contacts.remove(searchContacts(tempId));
@@ -182,7 +197,8 @@ class Manager {
 				break;
 			case FINDC://search for a contact
 				print("type the name of the contact you want to search for:");
-				checkInput(page);
+				//TODO not exact string needed
+				print(searchContacts(readScreen()).toFancyString());
 				setUi(Page.HOME);
 				break;
 			case LISTM://list c
@@ -194,42 +210,43 @@ class Manager {
 				break;
 			case ADDM_1://add c - 1
 				print("type the DATE of the meeting:");
-				checkInput(page);
+				tempName = readScreen();
 				setUi(Page.ADDM_2);
 				break;
 			case ADDM_2://add c - 2
 				print("type the NOTES about this meeting:");
-				checkInput(page);
+				contacts.add(new Contact(tempName, readScreen()));
 				print("Meeting  on'" + tempDate + "' added!\n");
 				setUi(Page.HOME);
 				break;
 			case EDITM_1://edit c - 1
 				print("type the ID of the meeting you want to edit:");
-				checkInput(page);
+				tempId = Integer.parseInt(readScreen());
 				setUi(Page.EDITM_2);
 				break;
 			case EDITM_2://edit c - 2
 				print("type the new DATE of the meeting (leave blank to not change):");
-				checkInput(page);
+				tempName = readScreen();
 				setUi(Page.EDITM_3);
 				break;
 			case EDITM_3://edit c - 3
 				print("type the new NOTES about the meeting (leave blank to not change):");
-				checkInput(page);
+				contacts.remove(searchContacts(tempId));
+				contacts.add(new Contact(tempId, tempName, readScreen()));
 				print("Meeting on '" + tempDate + "' edited.\n");
 				setUi(Page.HOME);
 				break;
 			case DELM:
 				print ("type the id of the meeting you want to delete:");
 				//get id
-				checkInput(page);
+				tempId = Integer.parseInt(readScreen());
 				//remove the meeting (this way around so the name can be printed before it was deleted)
 				print ("meeting '" + searchMeetings(tempId).toFancyString() + "' removed");
 				meetings.remove(searchMeetings(tempId));
 				break;
 			case FINDM://search for a contact
 				print("type the name of the meeting you want to search for:");
-				checkInput(page);
+				print(searchContacts(readScreen()).toFancyString());
 				setUi(Page.HOME);
 				break;
 			case VIEWM:
@@ -253,7 +270,10 @@ class Manager {
 
 	static void checkInput(Page page) {
 		switch (page) {
-			case HOME://all the commands you can enter from the main start page
+			/* all the commands you can enter from the main start page
+			 * basically just converts string inputs into page enums
+			 */
+			case HOME:
 				switch (readScreen()) {
 					case "list contacts": //list c
 						setUi(Page.LISTC);//list c
@@ -294,7 +314,7 @@ class Manager {
 					case "remove from meeting":
 						setUi(Page.DELFROMM);
 						break;
-					case "help"://help - shows all commands
+					case "help"://help - shows all commands (should really be in setUi but easyer to have it here)
 						print ("Here are all the commands:\n\n");
 						print ("list contacts\nadd contact\nedit contact\nremove contact\nfind contact\n\n");
 						print ("list meetings\nadd meeting\nedit meeting\nremove meeting\nfind meeting\nview meeting\nadd to meeting\nremove from meeting\n\n");
@@ -309,9 +329,8 @@ class Manager {
 						setUi(Page.HOME);
 						break;
 				}
-
 				break;
-			case ADDC_1:
+			/*case ADDC_1:
 				tempName = readScreen();
 				break;
 			case ADDC_2:
@@ -374,7 +393,7 @@ class Manager {
 				break;
 			case DELFROMM:
 				//TODO
-				break;
+				break;*/
 			default:
 				print("appliacation tried to switch to a page that does not exist!\n");
 				break;

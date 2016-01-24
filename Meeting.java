@@ -11,17 +11,22 @@ class Meeting {
 	private String notes;
 	private Set<Contact> attendees;
 
-	public Meeting(Date date, String notes, String attendeesString) {
+	public Meeting(int id, Date date, String notes, String attendeesString) {
 		//for now no way to put contacts in a meeting via the constructor
+		this.id = id;
 		this.date = date;
 		this.notes = notes;
 		//turn string of attendees into a hashset of contacts
 		attendees = new HashSet<Contact>();
 		for (int i = 0; i < attendeesString.length(); i += 3) {
-			/*if (Manager.searchContacts(attendeesString.substring(i,3)) != null) {
+			if (Manager.searchContacts(attendeesString.substring(i,3)) != null) {
 				attendees.add(Manager.searchContacts(attendeesString.substring(i,3)));
-			}CONTIUE FROM HERE*/
+			}
 		}
+	}
+
+	public Meeting(Date date, String notes, String attendeesString) {
+		this(100, date, notes, attendeesString);
 	}
 
 	public int getId() {
@@ -64,7 +69,15 @@ class Meeting {
 		return "- " + id +  " : " + date.toString() + " : " + notes + "\n"; //TODO WHAT DO I DO TO SHOW ATTENDEES
 	}
 
-	public String getAttendeeesString() {
+	public String getAttendeesString() {
+		String str = "";
+		for (Contact contact: attendees) {
+			str += contact.getId();
+		}
+		return "100";
+	}
+
+	public String getFancyAttendeesString() {
 		String str = "";
 		for (Contact contact: attendees) {
 			str += contact.toFancyString() + "\n";

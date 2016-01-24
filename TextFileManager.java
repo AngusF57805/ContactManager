@@ -60,7 +60,7 @@ public class TextFileManager {
 			bw.write(content);
 			bw.close();
 
-			System.out.println("Added '" + content + "' to the text file.");
+			//System.out.println("Added '" + content + "' to the text file.");
 
 		} catch (IOException e) {
 			e.printStackTrace();

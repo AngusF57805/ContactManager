@@ -36,6 +36,7 @@ class Manager {
 		initializeSets(); //initialize the contacts / meetings HashSets TODO remove?
 		fillSets(); //from text file
 		setUi(Page.HOME); //home page
+		print(findMeeting(0).getAttendeesString());
 	}
 
 	static void print(String str) {
@@ -66,31 +67,30 @@ class Manager {
 		clearFile();
 		//flush contacts
 		for (int i = 0; i < contacts.size(); i ++) {
-			writeToFile(findContact(i).toString(), true);
-			//write a new line (unless it is the last contact)
-			if (i != contacts.size() - 1) writeToFile("\n", true);
+			writeToFile(findContact(i).toString() + "\n", true);
 		}
-		//TODO flush meetings
-		/*for (int i = 0; i < meetings.size(); i ++) {
-			writeToFile(findMeeting(i).toString(), true);
-			//write a new line (unless it is the last contact)
-			if (i != meeeting.size() - 1) writeToFile("\n", true);
-		}*/
+
+		//read by fillSets method to see where meetings begin
+		writeToFile("*END-CONTACTS*", true);
+
+		//flush meetings
+		for (int i = 0; i < meetings.size(); i ++) {
+			writeToFile("\n" + findMeeting(i).toString() + "\n" + findMeeting(i).getAttendeesString(), true);
+		}
 	}
 
 	static void fillSets() {
 		TextFileManager tm = new TextFileManager();
 		int i = 0;
 
-		print ("DONE");	
 		while (!tm.readTextFile()[i].equals("*END-CONTACTS*")) {
 			contacts.add(new Contact(Integer.parseInt(tm.readTextFile()[i]), tm.readTextFile()[i + 1], tm.readTextFile()[i + 2]));
 			i += 3;
 		}
 
 		//TODO is a for loop with i=i bad?
-		for (i = i + 1; i < tm.getLineCount(); i += 3) {
-			meetings.add(new Meeting(new Date(), tm.readTextFile()[i + 1], tm.readTextFile()[i + 2]));
+		for (i = ++i; i < tm.getLineCount(); i += 4) {
+			meetings.add(new Meeting(Integer.parseInt(tm.readTextFile()[i]), new Date(), tm.readTextFile()[i + 2], tm.readTextFile()[i + 3]));
 		}
 	}
 

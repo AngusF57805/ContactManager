@@ -26,6 +26,7 @@ class Meeting {
 	}
 
 	public Meeting(Date date, String notes, String attendeesString) {
+		//TODO not hardcoded id
 		this(100, date, notes, attendeesString);
 	}
 

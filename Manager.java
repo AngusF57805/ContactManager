@@ -35,8 +35,7 @@ class Manager {
 	public static void main(String[] args) {
 		initializeSets(); //initialize the contacts / meetings HashSets TODO remove?
 		fillSets(); //from text file
-		setUi(Page.HOME); //home page
-		print(findMeeting(0).getAttendeesString());
+//		setUi(Page.HOME); //start the console ui on the home page
 	}
 
 	static void print(String str) {

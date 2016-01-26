@@ -35,7 +35,7 @@ class Manager {
 	public static void main(String[] args) {
 		initializeSets(); //initialize the contacts / meetings HashSets TODO remove?
 		fillSets(); //from text file
-//		setUi(Page.HOME); //start the console ui on the home page
+		setUi(Page.HOME); //start the console ui on the home page
 	}
 
 	static void print(String str) {
@@ -79,7 +79,13 @@ class Manager {
 	}
 
 	static void fillSets() {
+		
 		TextFileManager tm = new TextFileManager();
+		
+		if (tm.getLineCount() < 1) {
+			//dont bother if there are no lines in the text file
+			return;
+		}
 		int i = 0;
 
 		while (!tm.readTextFile()[i].equals("*END-CONTACTS*")) {
@@ -131,6 +137,34 @@ class Manager {
 	//TODO
 	static Meeting searchMeetings(String name) {return null;}
 
+	static int getNextContactId() {
+		if (contacts.size() < 1) return 100;
+
+		int highestId = findContact(0).getId();
+
+		for (int i = 1; i < contacts.size(); i++) {
+			if (findContact(i).getId() > highestId) {
+				highestId = findContact(i).getId();
+			}
+		}
+		
+		return highestId + 1;
+	}
+
+	static int getNextMeetingId() {
+		if (contacts.size() < 1) return 100;
+
+		int highestId = findContact(0).getId();
+
+		for (int i = 1; i < contacts.size(); i++) {
+			if (findContact(i).getId() > highestId) {
+				highestId = findContact(i).getId();
+			}
+		}
+		
+		return highestId + 1;
+	}
+	
 	static void setUi(Page page) {
 
 		switch (page) {
@@ -157,7 +191,7 @@ class Manager {
 				break;
 			case ADDC_2://add contact part 2
 				print("type any NOTES about this person:");
-				contacts.add(new Contact(tempName, readScreen()));
+				contacts.add(new Contact(getNextContactId(), tempName, readScreen()));
 				print("Contact '" + tempName + "' added!\n");
 				setUi(Page.HOME);
 				break;
@@ -214,7 +248,7 @@ class Manager {
 				break;
 			case ADDM_2://add c - 2
 				print("type the NOTES about this meeting:");
-				contacts.add(new Contact(tempName, readScreen()));
+				meetings.add(new Meeting(getNextMeetingId(), new Date()/*TODO*/, readScreen(), ""));
 				print("Meeting  on'" + tempDate + "' added!\n");
 				setUi(Page.HOME);
 				break;
@@ -225,13 +259,14 @@ class Manager {
 				break;
 			case EDITM_2://edit c - 2
 				print("type the new DATE of the meeting (leave blank to not change):");
-				tempName = readScreen();
+				//tempDate = readScreen();
+				tempDate = new Date();//TODO
 				setUi(Page.EDITM_3);
 				break;
 			case EDITM_3://edit c - 3
 				print("type the new NOTES about the meeting (leave blank to not change):");
-				contacts.remove(searchContacts(tempId));
-				contacts.add(new Contact(tempId, tempName, readScreen()));
+				meetings.remove(searchMeetings(tempId));
+				meetings.add(new Meeting(tempId, new Date()/*TODO*/, readScreen(), ""));
 				print("Meeting on '" + tempDate + "' edited.\n");
 				setUi(Page.HOME);
 				break;
@@ -329,72 +364,8 @@ class Manager {
 						break;
 				}
 				break;
-			/*case ADDC_1:
-				tempName = readScreen();
-				break;
-			case ADDC_2:
-				contacts.add(new Contact(tempName, readScreen()));
-				break;
-			case EDITC_1:
-				tempId = Integer.parseInt(readScreen());
-				break;
-			case EDITC_2:
-				tempName = readScreen();
-				if (tempName.equals("") || tempName == null) {
-					tempName = searchContacts(tempId).getName();
-				}
-				break;
-			case EDITC_3:
-				String tempNotes = readScreen();
-				if (tempNotes.equals("") || tempNotes == null) {
-					tempNotes = searchContacts(tempId).getNotes();
-				}
-				contacts.remove(searchContacts(tempId));
-				contacts.add(new Contact(tempId, tempName, tempNotes));
-				break;
-			case DELC:
-				tempId = Integer.parseInt(readScreen());
-				break;
-			case FINDC:
-				//TODO not exact string
-				print(searchContacts(readScreen()).toFancyString());
-				break;
-			case ADDM_1:
-				tempName = readScreen();
-				break;
-			case ADDM_2:
-				contacts.add(new Contact(tempName, readScreen()));
-				break;
-			case EDITM_1:
-				tempId = Integer.parseInt(readScreen());
-				break;
-			case EDITM_2:
-				tempName = readScreen();
-				break;
-			case EDITM_3:
-				contacts.remove(searchContacts(tempId));
-				contacts.add(new Contact(tempId, tempName, readScreen()));
-				break;
-			case DELM:
-				tempId = Integer.parseInt(readScreen());
-				break;
-			case FINDM:
-				print(searchContacts(readScreen()).toFancyString());
-				break;
-			case VIEWM:
-				//TODO
-				break;
-			case ADDTOM_1:
-				//TODO
-				break;
-			case ADDTOM_2:
-				//TODO
-				break;
-			case DELFROMM:
-				//TODO
-				break;*/
 			default:
-				print("appliacation tried to switch to a page that does not exist!\n");
+				print("appliacation get input from a page that does not exist!\n");
 				break;
 		}
 	}

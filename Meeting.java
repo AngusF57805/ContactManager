@@ -12,25 +12,18 @@ class Meeting {
 	private Set<Contact> attendees;
 
 	public Meeting(int id, Date date, String notes, String attendeesString) {
-		//for now no way to put contacts in a meeting via the constructor
+		//there is no way to put contacts in a meeting via the constructor
 		this.id = id;
 		this.date = date;
 		this.notes = notes;
 		//turn string of attendees into a hashset of contacts
 		attendees = new HashSet<Contact>();
 		for (int i = 0; i < attendeesString.length(); i += 3) {
-			if (Manager.searchContacts(attendeesString.substring(i,3)) != null) {
-				attendees.add(Manager.searchContacts(attendeesString.substring(i,3)));
+			if (Manager.searchContacts(Integer.parseInt(attendeesString.substring(i,3))) != null) {
+				attendees.add(Manager.searchContacts(Integer.parseInt(attendeesString.substring(i,3))));
 			}
 		}
 	}
-
-	/*
-	public Meeting(Date date, String notes, String attendeesString) {
-		//TODO not hardcoded id
-		this(100, date, notes, attendeesString);
-	}
-	*/
 
 	public int getId() {
 		return id;
@@ -69,21 +62,22 @@ class Meeting {
 	}
 
 	public String toFancyString() { //more ui friendly
-		return "- " + id +  " : " + date.toString() + " : " + notes + "\n"; //TODO WHAT DO I DO TO SHOW ATTENDEES
+		return "- " + id +  " : " + date.toString() + " : " + notes; //TODO WHAT DO I DO TO SHOW ATTENDEES
 	}
 
 	public String getAttendeesString() {
 		String str = "";
-		for (Contact contact: attendees) {
-			str += contact.getId();
+		for (Contact contact : attendees) {
+			str = contact.getId() + "";
 		}
-		return "100";
+		return str;
+ 
 	}
 
 	public String getFancyAttendeesString() {
-		String str = "";
-		for (Contact contact: attendees) {
-			str += contact.toFancyString() + "\n";
+		String str = "THE ATTENDEES ARE:\n";
+		for (Contact contact : attendees) {
+			str = contact.toFancyString() + "\n";
 		}
 		return str;
 	}

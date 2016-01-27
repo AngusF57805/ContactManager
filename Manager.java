@@ -132,10 +132,28 @@ class Manager {
 	}
 
 	//TODO
-	static Meeting searchMeetings(int id) {return null;}
+	static Meeting searchMeetings(int id) {
+		//search meetings for an id
+		for (Meeting meeting : meetings) {
+			if (meeting.getId() == id) {
+				return meeting;
+			}
+		}
+		return null;//TODO fix this, its super bad
+	}
 
 	//TODO
-	static Meeting searchMeetings(String name) {return null;}
+	static Meeting searchMeetings(String notes) {
+		//search meetings for Notes? TODO no idea how to implement
+		for (Meeting meeting : meetings) {
+			if (meeting.getNotes().toLowerCase().equals(notes.toLowerCase())) {
+				//result.concat(meeting);
+				return meeting;
+			}
+		}
+		return null;
+		//return result; //TODO ditto + multiple contacts return
+	}
 
 	static int getNextContactId() {
 		if (contacts.size() < 1) return 100;
@@ -152,12 +170,12 @@ class Manager {
 	}
 
 	static int getNextMeetingId() {
-		if (contacts.size() < 1) return 100;
+		if (meetings.size() < 1) return 100;
 
-		int highestId = findContact(0).getId();
+		int highestId = findMeeting(0).getId();
 
-		for (int i = 1; i < contacts.size(); i++) {
-			if (findContact(i).getId() > highestId) {
+		for (int i = 1; i < meetings.size() - 1 /*TODO not sure why i did this */; i++) {
+			if (findMeeting(i).getId() > highestId) {
 				highestId = findContact(i).getId();
 			}
 		}
@@ -179,7 +197,7 @@ class Manager {
 				} else {
 					print("LIST OF CONTACTS:\n");
 					for (int i = 0; i < contacts.size(); i ++) {
-						print(findContact(i).toFancyString());
+						print(findContact(i).toFancyString() + "\n");
 					}
 				}
 				setUi(Page.HOME);
@@ -224,20 +242,20 @@ class Manager {
 				//get id
 				tempId = Integer.parseInt(readScreen());
 				//remove the contact (this way around so the name can be printed before it was deleted)
-				print ("removed contact '" + searchContacts(tempId).toFancyString());
+				print ("removed contact '" + searchContacts(tempId).toFancyString() + "'\n");
 				contacts.remove(searchContacts(tempId));
 				setUi(Page.HOME);
 				break;
 			case FINDC://search for a contact
 				print("type the name of the contact you want to search for:");
 				//TODO not exact string needed
-				print(searchContacts(readScreen()).toFancyString());
+				print(searchContacts(readScreen()).toFancyString() + "\n");
 				setUi(Page.HOME);
 				break;
 			case LISTM://list c
 				print("LIST OF MEETINGS:\n");
 				for (int i = 0; i < meetings.size(); i ++) {
-					print(findMeeting(i).toFancyString());
+					print(findMeeting(i).toFancyString() + "\n");
 				}
 				setUi(Page.HOME);
 				break;
@@ -249,7 +267,7 @@ class Manager {
 			case ADDM_2://add c - 2
 				print("type the NOTES about this meeting:");
 				meetings.add(new Meeting(getNextMeetingId(), new Date()/*TODO*/, readScreen(), ""));
-				print("Meeting  on'" + tempDate + "' added!\n");
+				print("Meeting on '" + tempDate + "' added!\n");
 				setUi(Page.HOME);
 				break;
 			case EDITM_1://edit c - 1
@@ -259,7 +277,7 @@ class Manager {
 				break;
 			case EDITM_2://edit c - 2
 				print("type the new DATE of the meeting (leave blank to not change):");
-				//tempDate = readScreen();
+				String oldTempDate = readScreen();
 				tempDate = new Date();//TODO
 				setUi(Page.EDITM_3);
 				break;
@@ -275,16 +293,23 @@ class Manager {
 				//get id
 				tempId = Integer.parseInt(readScreen());
 				//remove the meeting (this way around so the name can be printed before it was deleted)
-				print ("meeting '" + searchMeetings(tempId).toFancyString() + "' removed");
+				print ("meeting '" + searchMeetings(tempId).toFancyString() + "' removed\n");
 				meetings.remove(searchMeetings(tempId));
+				setUi(Page.HOME);
 				break;
 			case FINDM://search for a contact
-				print("type the name of the meeting you want to search for:");
-				print(searchContacts(readScreen()).toFancyString());
+				//TODO dont know how to implment
+				print("type the NOTES of the meeting you want to search for:");
+				print(searchContacts(readScreen()).toFancyString() +"\n");
 				setUi(Page.HOME);
 				break;
 			case VIEWM:
 				//TODO
+				print("type the id of the meeting you want to view:");
+				tempId = Integer.parseInt(readScreen());
+				//using the id get the meeting, then print attendees
+				print(searchMeetings(tempId).getFancyAttendeesString());
+				setUi(Page.HOME);
 				break;
 			case ADDTOM_1:
 				//TODO

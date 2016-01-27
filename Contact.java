@@ -12,11 +12,6 @@ class Contact {
 		this.notes = notes;
 	}
 
-	public Contact(String name, String notes) {
-		//TODO make the id stuff work
-		this (100, name, notes);
-	}
-
 	public int getId() {
 		return id;
 	}
@@ -46,6 +41,6 @@ class Contact {
 	}
 
 	public String toFancyString() { //for list contact
-		return "- " + id +  " : " + name + " : " + notes + "\n";
+		return "- " + id +  " : " + name + " : " + notes;
 	}
 }

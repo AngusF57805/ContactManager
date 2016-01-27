@@ -135,6 +135,7 @@ class Manager {
 	static Meeting searchMeetings(int id) {
 		//search meetings for an id
 		for (Meeting meeting : meetings) {
+			print ("id : " + id + " not equal to " + meeting.getId());
 			if (meeting.getId() == id) {
 				return meeting;
 			}
@@ -283,9 +284,14 @@ class Manager {
 				break;
 			case EDITM_3://edit c - 3
 				print("type the new NOTES about the meeting (leave blank to not change):");
-				meetings.remove(searchMeetings(tempId));
-				meetings.add(new Meeting(tempId, new Date()/*TODO*/, readScreen(), ""));
+				tempNotes = readScreen();
+				if (tempNotes.equals("") || tempNotes == null) {
+					//dont change the notes if user input is blank
+					tempNotes = searchMeetings(tempId).getNotes();
+				}
+				meetings.add(new Meeting(tempId, new Date()/*TODO*/, tempNotes, ""));
 				print("Meeting on '" + tempDate + "' edited.\n");
+				meetings.remove(searchMeetings(tempId));
 				setUi(Page.HOME);
 				break;
 			case DELM:

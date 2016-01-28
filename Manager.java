@@ -16,6 +16,9 @@ class Manager {
 	static String tempName;
 	static Date tempDate;
 	static int tempId;
+	static int tempAttendeeId;
+
+	public static final String dateFormatString = "yyyy-MM-dd HH:mm:ss";
 
 	static enum Page {
 		/* enum which stores all the possible pages of the ui
@@ -27,12 +30,13 @@ class Manager {
 		 * FIND - search for a name / notes / date in an object in the hashset
 		 * VIEWM - shows the conacts the attend a meeting
 		 * ADDTOM - adds to a meeting
-		 * DELFROMM - deletes from m
+		 * DELFROMM_1 - deletes from m
+		 * DELFROMM_2 - deletes from m
 		 */
 		HOME,
 		LISTC, ADDC_1, ADDC_2, EDITC_1, EDITC_2, EDITC_3, DELC, FINDC,
 		LISTM, ADDM_1, ADDM_2, EDITM_1, EDITM_2, EDITM_3, DELM, FINDM,
-		VIEWM, ADDTOM_1, ADDTOM_2, DELFROMM
+		VIEWM, ADDTOM_1, ADDTOM_2, DELFROMM_1, DELFROMM_2
 	}
 
 	public static void main(String[] args) {
@@ -58,7 +62,7 @@ class Manager {
 	static Date toDate(String str) {
 		//used steves email
 		Date date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.UK);
+		SimpleDateFormat sdf = new SimpleDateFormat(Manager.dateFormatString, Locale.UK);
 		try {
 			date = sdf.parse(str);
 			return date;
@@ -91,7 +95,7 @@ class Manager {
 
 		//flush meetings
 		for (int i = 0; i < meetings.size(); i ++) {
-			writeToFile("\n" + findMeeting(i).toString(), true);
+			writeToFile("\n" + searchMeetings(i).toString(), true);
 		}
 	}
 
@@ -303,7 +307,7 @@ class Manager {
 				setUi(Page.HOME);
 				break;
 			case ADDM_1://add c - 1
-				print("type the DATE of the meeting:");
+				print("type the DATE of the meeting (format = '" + Manager.dateFormatString + "' :");
 				tempDate = toDate(readScreen());
 				if (tempDate == null) {
 					setUi(Page.ADDM_1);
@@ -356,7 +360,6 @@ class Manager {
 				setUi(Page.HOME);
 				break;
 			case VIEWM:
-				//TODO
 				print("type the id of the meeting you want to view:");
 				tempId = Integer.parseInt(readScreen());
 				//using the id get the meeting, then print attendees
@@ -364,13 +367,50 @@ class Manager {
 				setUi(Page.HOME);
 				break;
 			case ADDTOM_1:
-				//TODO
+				print("type the id of the MEETING you want to add a contact to:");
+				tempId = Integer.parseInt(readScreen());
+				if (searchMeetings(tempId) == null) {
+					print("A meeting with the id '" + tempId + "' does not exist");
+					setUi(Page.HOME);
+					break;
+				}
+				setUi(Page.ADDM_2);
 				break;
 			case ADDTOM_2:
-				//TODO
+				print("type the id of the contact you want to add to the meeting");
+				tempAttendeeId = Integer.parseInt(readScreen());
+				if (searchContacts(tempAttendeeId) == null) {
+					print("A contact with the id '" + tempAttendeeId + "' does not exist");
+					setUi(Page.HOME);
+					break;
+				}
+				
+				//finally add the contact as an attendee to the meeting
+				searchMeetings(tempId).addAttendee(searchContacts(tempAttendeeId));	
+				setUi(Page.HOME);
 				break;
-			case DELFROMM:
-				//TODO
+			case DELFROMM_1:
+				print("type the id of the MEETING you want to remove a contact from:");
+				tempId = Integer.parseInt(readScreen());
+				if (searchMeetings(tempId) == null) {
+					print("A meeting with the id '" + tempId + "' does not exist");
+					setUi(Page.HOME);
+					break;
+				}
+				setUi(Page.ADDM_2);
+				break;
+			case DELFROMM_2:
+				print("type the id of the contact you want to remove from the meeting");
+				tempAttendeeId = Integer.parseInt(readScreen());
+				if (searchContacts(tempAttendeeId) == null) {
+					print("A contact with the id '" + tempAttendeeId + "' does not exist");
+					setUi(Page.HOME);
+					break;
+				}
+				
+				//finally remove the contact as an attendee to the meeting
+				findMeeting(tempId).removeAttendee(searchContacts(tempAttendeeId));	
+				setUi(Page.HOME);
 				break;
 			default:
 				print("tried to go to a ui page that does not exist\n");
@@ -423,7 +463,7 @@ class Manager {
 						setUi(Page.ADDTOM_1);
 						break;
 					case "remove from meeting":
-						setUi(Page.DELFROMM);
+						setUi(Page.DELFROMM_1);
 						break;
 					case "help"://help - shows all commands (should really be in setUi but easyer to have it here)
 						print ("Here are all the commands:\n\n");

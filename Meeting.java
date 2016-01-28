@@ -12,7 +12,7 @@ class Meeting {
 	private String notes;
 	private Set<Contact> attendees;
 
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.UK);
+	SimpleDateFormat sdf = new SimpleDateFormat(Manager.dateFormatString, Locale.UK);
 
 	public Meeting(int id, Date date, String notes, String attendeesString) {
 		//there is no way to put contacts in a meeting via the constructor
@@ -52,12 +52,12 @@ class Meeting {
 		this.notes = notes;
 	}
 
-	public void setAttendees(Set<Contact> attendees) {
-		this.attendees = attendees;
+	public void addAttendee(Contact contact) {
+		attendees.add(contact);
 	}
 
-	public void addAttendees(Contact contact) {
-		attendees.add(contact);
+	public void removeAttendee(Contact contact) {
+		attendees.remove(contact);
 	}
 
 	public String toString() { //overrides deafult .toString

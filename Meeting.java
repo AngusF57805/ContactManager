@@ -77,7 +77,7 @@ class Meeting {
 	}
 
 	public String getFancyAttendeesString() {
-		String str = "THE ATTENDEES ARE:\n";
+		String str = "";
 		for (Contact contact : attendees) {
 			str += contact.toFancyString() + "\n";
 		}

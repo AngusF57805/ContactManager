@@ -33,16 +33,21 @@ class Manager {
 	}
 
 	public static void main(String[] args) {
-		initializeSets(); //initialize the contacts / meetings HashSets TODO remove?
-		fillSets(); //from text file
+		//initialize the contacts / meetings HashSets
+		contacts = new HashSet<Contact>();
+		meetings = new HashSet<Meeting>();
+
+		fillSets(); //fill hashsets with data from text file
 		setUi(Page.HOME); //start the console ui on the home page
 	}
 
 	static void print(String str) {
+		//shortcut print method
 		System.out.print(str);
 	}
 
-	static String readScreen() { //maybe make a version for nextInt
+	static String readScreen() {
+		//shortcut scan method
 		Scanner sc = new Scanner(System.in);
 		return sc.nextLine().trim();
 	}
@@ -57,11 +62,6 @@ class Manager {
 		tm.clearTextFile();
 	}
 
-	static void initializeSets() {
-		contacts = new HashSet<Contact>();
-		meetings = new HashSet<Meeting>();
-	}
-
 	static void flush() {
 		clearFile();
 		//flush contacts
@@ -74,7 +74,7 @@ class Manager {
 
 		//flush meetings
 		for (int i = 0; i < meetings.size(); i ++) {
-			writeToFile("\n" + findMeeting(i).toString() + "\n" + findMeeting(i).getAttendeesString(), true);
+			writeToFile("\n" + findMeeting(i).toString(), true);
 		}
 	}
 
@@ -93,7 +93,7 @@ class Manager {
 			i += 3;
 		}
 
-		//TODO is a for loop with i=i bad?
+		//TODO is a for loop with an i=i start bad?
 		for (i = ++i; i < tm.getLineCount(); i += 4) {
 			meetings.add(new Meeting(Integer.parseInt(tm.readTextFile()[i]), new Date(), tm.readTextFile()[i + 2], tm.readTextFile()[i + 3]));
 		}
@@ -116,7 +116,7 @@ class Manager {
 				return contact;
 			}
 		}
-		return null;//TODO fix this, its super bad
+		return null;//TODO make this not crash when id is not found
 	}
 
 	static Contact searchContacts(String name) {
@@ -135,7 +135,6 @@ class Manager {
 	static Meeting searchMeetings(int id) {
 		//search meetings for an id
 		for (Meeting meeting : meetings) {
-			print ("id : " + id + " not equal to " + meeting.getId());
 			if (meeting.getId() == id) {
 				return meeting;
 			}
@@ -194,7 +193,7 @@ class Manager {
 				break;
 			case LISTC://list all contacts
 				if (contacts.size () < 1) {
-					print("No contacts found\n");
+					print("No contacts found!\n");
 				} else {
 					print("LIST OF CONTACTS:\n");
 					for (int i = 0; i < contacts.size(); i ++) {
@@ -214,15 +213,22 @@ class Manager {
 				print("Contact '" + tempName + "' added!\n");
 				setUi(Page.HOME);
 				break;
-			case EDITC_1://edit c - 1
+			case EDITC_1://edit contact part 1
 				print("type the id of the contact you want to edit:");
 				tempId = Integer.parseInt(readScreen());
+				if (searchContacts(tempId) == null) {
+					//make sure the contact exits, if not cancel operation
+					print("ERROR: Contact with id '" + tempId + "' does not exist");
+					setUi(Page.HOME);//TODO maybe just loop back
+					break;
+				}
 				setUi(Page.EDITC_2);
 				break;
-			case EDITC_2://edit c - 2
+			case EDITC_2://edit contact part 2
 				print("type the new FULL NAME of the contact (leave blank to not change):");
 				tempName = readScreen();
 				if (tempName.equals("") || tempName == null) {
+					//if the name was blank, just set the name to what it was before
 					tempName = searchContacts(tempId).getName();
 				}
 				setUi(Page.EDITC_3);
@@ -242,6 +248,14 @@ class Manager {
 				print ("type the id of the contact you want to delete:");
 				//get id
 				tempId = Integer.parseInt(readScreen());
+			
+				if (searchContacts(tempId) == null) {
+					//make sure the contact exits, if not cancel operation
+					print("ERROR: Contact with id '" + tempId + "' does not exist");
+					setUi(Page.HOME);//TODO maybe just loop back
+					break;
+				}
+					
 				//remove the contact (this way around so the name can be printed before it was deleted)
 				print ("removed contact '" + searchContacts(tempId).toFancyString() + "'\n");
 				contacts.remove(searchContacts(tempId));
@@ -250,7 +264,13 @@ class Manager {
 			case FINDC://search for a contact
 				print("type the name of the contact you want to search for:");
 				//TODO not exact string needed
-				print(searchContacts(readScreen()).toFancyString() + "\n");
+				String query = readScreen();
+				if (searchContacts(query) == null) {
+					//check contact can be found
+					print ("Sorry, no contact with name '" + query + "' was found");
+				} else {
+					print(searchContacts(query).toFancyString() + "\n");
+				}
 				setUi(Page.HOME);
 				break;
 			case LISTM://list c

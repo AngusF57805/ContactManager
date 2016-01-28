@@ -58,11 +58,11 @@ class Meeting {
 	}
 
 	public String toString() { //overrides deafult .toString
-		return id + "\n" + date.toString() + "\n" + notes; //TODO AGGGGHHH
+		return id + "\n" + date.toString() + "\n" + notes + "\n" + getAttendeesString();
 	}
 
 	public String toFancyString() { //more ui friendly
-		return "- " + id +  " : " + date.toString() + " : " + notes; //TODO WHAT DO I DO TO SHOW ATTENDEES
+		return "- " + id +  " : " + date.toString() + " : " + notes;
 	}
 
 	public String getAttendeesString() {
@@ -70,8 +70,8 @@ class Meeting {
 		for (Contact contact : attendees) {
 			str = contact.getId() + "";
 		}
-		return str;
- 
+		//return str;
+		return "TEST";
 	}
 
 	public String getFancyAttendeesString() {

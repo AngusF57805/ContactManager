@@ -254,7 +254,12 @@ class Manager {
 				setUi(Page.HOME);
 				break;
 			case LISTM://list c
-				print("LIST OF MEETINGS:\n");
+				if (mettings.size() > 0) {
+					print("LIST OF MEETINGS:\n");
+				} else {
+					print("NO MEETINGS FOUND!\n");
+				}
+				
 				for (int i = 0; i < meetings.size(); i ++) {
 					print(findMeeting(i).toFancyString() + "\n");
 				}

@@ -19,8 +19,8 @@ class Meeting {
 		//turn string of attendees into a hashset of contacts
 		attendees = new HashSet<Contact>();
 		for (int i = 0; i < attendeesString.length(); i += 3) {
-			if (Manager.searchContacts(Integer.parseInt(attendeesString.substring(i,3))) != null) {
-				attendees.add(Manager.searchContacts(Integer.parseInt(attendeesString.substring(i,3))));
+			if (Manager.searchContacts(Integer.parseInt(attendeesString.substring(i,i + 3))) != null) {
+				attendees.add(Manager.searchContacts(Integer.parseInt(attendeesString.substring(i,i + 3))));
 			}
 		}
 	}
@@ -70,14 +70,13 @@ class Meeting {
 		for (Contact contact : attendees) {
 			str = contact.getId() + "";
 		}
-		//return str;
-		return "TEST";
+		return str;
 	}
 
 	public String getFancyAttendeesString() {
 		String str = "THE ATTENDEES ARE:\n";
 		for (Contact contact : attendees) {
-			str = contact.toFancyString() + "\n";
+			str += contact.toFancyString() + "\n";
 		}
 		return str;
 	}

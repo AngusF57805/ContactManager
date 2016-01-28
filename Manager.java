@@ -218,7 +218,7 @@ class Manager {
 				tempId = Integer.parseInt(readScreen());
 				if (searchContacts(tempId) == null) {
 					//make sure the contact exits, if not cancel operation
-					print("ERROR: Contact with id '" + tempId + "' does not exist");
+					print("ERROR: Contact with id '" + tempId + "' does not exist\n");
 					setUi(Page.HOME);//TODO maybe just loop back
 					break;
 				}
@@ -251,7 +251,7 @@ class Manager {
 			
 				if (searchContacts(tempId) == null) {
 					//make sure the contact exits, if not cancel operation
-					print("ERROR: Contact with id '" + tempId + "' does not exist");
+					print("ERROR: Contact with id '" + tempId + "' does not exist\n");
 					setUi(Page.HOME);//TODO maybe just loop back
 					break;
 				}
@@ -267,7 +267,7 @@ class Manager {
 				String query = readScreen();
 				if (searchContacts(query) == null) {
 					//check contact can be found
-					print ("Sorry, no contact with name '" + query + "' was found");
+					print ("Sorry, no contact with name '" + query + "' was found\n");
 				} else {
 					print(searchContacts(query).toFancyString() + "\n");
 				}
@@ -287,7 +287,7 @@ class Manager {
 				break;
 			case ADDM_1://add c - 1
 				print("type the DATE of the meeting:");
-				tempName = readScreen();
+				tempName = readScreen();//TODO
 				setUi(Page.ADDM_2);
 				break;
 			case ADDM_2://add c - 2

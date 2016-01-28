@@ -254,7 +254,7 @@ class Manager {
 				setUi(Page.HOME);
 				break;
 			case LISTM://list c
-				if (mettings.size() > 0) {
+				if (meetings.size() > 0) {
 					print("LIST OF MEETINGS:\n");
 				} else {
 					print("NO MEETINGS FOUND!\n");

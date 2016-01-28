@@ -233,7 +233,7 @@ class Manager {
 				}
 				setUi(Page.EDITC_3);
 				break;
-			case EDITC_3://edit c - 3
+			case EDITC_3://edit contact part 3
 				print("type any new NOTES about the contact (leave blank to not change):");
 				String tempNotes = readScreen();
 				if (tempNotes.equals("") || tempNotes == null) {
@@ -274,15 +274,15 @@ class Manager {
 				setUi(Page.HOME);
 				break;
 			case LISTM://list c
-				if (mettings.size() > 0) {
+				if (meetings.size() > 0) {
 					print("LIST OF MEETINGS:\n");
+					for (int i = 0; i < meetings.size(); i ++) {
+						print(findMeeting(i).toFancyString() + "\n");
+					}
 				} else {
-					print("NO MEETINGS FOUND!\n");
+					print("No meetings found!\n");
 				}
-				
-				for (int i = 0; i < meetings.size(); i ++) {
-					print(findMeeting(i).toFancyString() + "\n");
-				}
+			
 				setUi(Page.HOME);
 				break;
 			case ADDM_1://add c - 1

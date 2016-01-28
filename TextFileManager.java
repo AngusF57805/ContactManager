@@ -26,7 +26,7 @@ public class TextFileManager {
 				textFile.createNewFile();
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("ERROR: an IO issue occurred\n");
 		}
 	}
 	
@@ -45,8 +45,7 @@ public class TextFileManager {
 			sc.close();			
 
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("ERROR: File 'SaveFile.txt' was not found\n");
 		}
 	
 		return contents;
@@ -63,7 +62,7 @@ public class TextFileManager {
 			//System.out.println("Added '" + content + "' to the text file.");
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("ERROR: an IO issue occurred\n");	
 		}
 	}
 
@@ -73,26 +72,28 @@ public class TextFileManager {
 	}
 
 	public int getLineCount () {
-		try {
-			int lines = 0;
+		//just returns the number of lines in the file
+		int lines = 0;
 
-			FileReader fr = new FileReader(textFile);
-			LineNumberReader lnr = new LineNumberReader(fr);
+		LineNumberReader lnr;
+		FileReader fr;
+
+		try {
+			fr = new FileReader(textFile);
+			lnr = new LineNumberReader(fr);
 
 			while (lnr.readLine() != null){
 				lines ++;
 			}
 
-			lnr.close();// does this close fr too?
+			lnr.close();
 
-			return lines;
-			
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("ERROR: an IO issue occurred\n");
 		} finally {
-			//not 100% sure what to put here
+			//lnr.close();//NO IDEA HOW TODO
 		}
 		
-		return 0;
+		return lines;
 	}
 }

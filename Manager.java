@@ -5,11 +5,14 @@ import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Date;
 import java.util.*;//TODO fix this
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 class Manager {
 
 	static Set<Contact> contacts;
 	static Set<Meeting> meetings;
+
 	static String tempName;
 	static Date tempDate;
 	static int tempId;
@@ -50,6 +53,20 @@ class Manager {
 		//shortcut scan method
 		Scanner sc = new Scanner(System.in);
 		return sc.nextLine().trim();
+	}
+	
+	static Date toDate(String str) {
+		//used steves email
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.UK);
+		try {
+			date = sdf.parse(str);
+			return date;
+		} catch (ParseException e) {
+			print("ERROR: Date conversion failed for date:" + str + "\n");
+		}
+
+		return null;
 	}
 
 	static void writeToFile(String str, boolean additiveWrite) {
@@ -95,7 +112,7 @@ class Manager {
 
 		//TODO is a for loop with an i=i start bad?
 		for (i = ++i; i < tm.getLineCount(); i += 4) {
-			meetings.add(new Meeting(Integer.parseInt(tm.readTextFile()[i]), new Date(), tm.readTextFile()[i + 2], tm.readTextFile()[i + 3]));
+			meetings.add(new Meeting(Integer.parseInt(tm.readTextFile()[i]), toDate(tm.readTextFile()[i + 1]), tm.readTextFile()[i + 2], tm.readTextFile()[i + 3]));
 		}
 	}
 
@@ -273,7 +290,7 @@ class Manager {
 				}
 				setUi(Page.HOME);
 				break;
-			case LISTM://list c
+			case LISTM://list all meetings
 				if (meetings.size() > 0) {
 					print("LIST OF MEETINGS:\n");
 					for (int i = 0; i < meetings.size(); i ++) {
@@ -287,13 +304,17 @@ class Manager {
 				break;
 			case ADDM_1://add c - 1
 				print("type the DATE of the meeting:");
-				tempName = readScreen();//TODO
+				tempDate = toDate(readScreen());
+				if (tempDate == null) {
+					setUi(Page.ADDM_1);
+					break;
+				}
 				setUi(Page.ADDM_2);
 				break;
 			case ADDM_2://add c - 2
 				print("type the NOTES about this meeting:");
-				meetings.add(new Meeting(getNextMeetingId(), new Date()/*TODO*/, readScreen(), ""));
-				print("Meeting on '" + tempDate + "' added!\n");
+				meetings.add(new Meeting(getNextMeetingId(), tempDate, readScreen(), ""));
+				print("Meeting on '" + tempDate.toString() + "' added!\n");
 				setUi(Page.HOME);
 				break;
 			case EDITM_1://edit c - 1

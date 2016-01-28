@@ -3,6 +3,7 @@ package ContactManager;
 import java.util.Date;
 //import java.util.Set; //is this all i need?
 import java.util.*;
+import java.text.SimpleDateFormat;
 
 class Meeting {
 
@@ -10,6 +11,8 @@ class Meeting {
 	private Date date;
 	private String notes;
 	private Set<Contact> attendees;
+
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.UK);
 
 	public Meeting(int id, Date date, String notes, String attendeesString) {
 		//there is no way to put contacts in a meeting via the constructor
@@ -58,11 +61,11 @@ class Meeting {
 	}
 
 	public String toString() { //overrides deafult .toString
-		return id + "\n" + date.toString() + "\n" + notes + "\n" + getAttendeesString();
+		return id + "\n" + sdf.format(date) + "\n" + notes + "\n" + getAttendeesString();
 	}
 
 	public String toFancyString() { //more ui friendly
-		return "- " + id +  " : " + date.toString() + " : " + notes;
+		return "- " + id +  " : " + sdf.format(date) + " : " + notes;
 	}
 
 	public String getAttendeesString() {

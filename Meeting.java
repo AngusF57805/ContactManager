@@ -1,8 +1,9 @@
 package ContactManager;
 
 import java.util.Date;
-//import java.util.Set; //is this all i need?
-import java.util.*;
+import java.util.Locale;
+import java.util.HashSet;
+import java.util.Set;
 import java.text.SimpleDateFormat;
 
 class Meeting {

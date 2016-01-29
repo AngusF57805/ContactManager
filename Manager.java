@@ -12,6 +12,7 @@ import java.lang.Exception;
 class Manager {
 	/* ME TODO LIST
 	 * detailed help
+	 * better search
 	 */
 	static Set<Contact> contacts;
 	static Set<Meeting> meetings;

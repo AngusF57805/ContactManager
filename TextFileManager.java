@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class TextFileManager {
-	//converted to method used by cave of programming [https://youtu.be/Sm9yoju1me0]
 	
 	private File textFile;
 	//what the file should be called
@@ -90,8 +89,6 @@ public class TextFileManager {
 
 		} catch (IOException e) {
 			System.out.println("ERROR: an IO issue occurred\n");
-		} finally {
-			//lnr.close();//NO IDEA HOW TODO
 		}
 		
 		return lines;

@@ -4,12 +4,15 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Date;
-import java.util.*;//TODO fix this
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.text.ParseException;
+import java.lang.Exception;
 
 class Manager {
-
+	/* ME TODO LIST
+	 * detailed help
+	 */
 	static Set<Contact> contacts;
 	static Set<Meeting> meetings;
 
@@ -45,6 +48,7 @@ class Manager {
 		meetings = new HashSet<Meeting>();
 
 		fillSets(); //fill hashsets with data from text file
+		print("~ Welcome to the Contacts Manager. Type 'help' for a list of commands. ~\n");
 		setUi(Page.HOME); //start the console ui on the home page
 	}
 
@@ -67,7 +71,7 @@ class Manager {
 			date = sdf.parse(str);
 			return date;
 		} catch (ParseException e) {
-			print("ERROR: Date conversion failed for date:" + str + "\n");
+			print("* ERROR: Date conversion failed for date:" + str + "\n");
 		}
 
 		return null;
@@ -114,7 +118,6 @@ class Manager {
 			i += 3;
 		}
 
-		//TODO is a for loop with an i=i start bad?
 		for (i = ++i; i < tm.getLineCount(); i += 4) {
 			meetings.add(new Meeting(Integer.parseInt(tm.readTextFile()[i]), toDate(tm.readTextFile()[i + 1]), tm.readTextFile()[i + 2], tm.readTextFile()[i + 3]));
 		}
@@ -163,7 +166,6 @@ class Manager {
 		return null;
 	}
 
-	//TODO
 	static Meeting searchMeetings(String notes) {
 		//search meetings for Notes
 		for (Meeting meeting : meetings) {
@@ -175,38 +177,38 @@ class Manager {
 	}
 
 	static int getNextContactId() {
-		if (contacts.size() < 1) return 100;
-
-		int highestId = findContact(0).getId();
-
-		for (int i = 1; i < contacts.size(); i++) {
-			if (findContact(i).getId() > highestId) {
-				highestId = findContact(i).getId();
+		int nextId = 100;
+		for (int i = 0; i < contacts.size(); i++) {
+			if (searchContacts(nextId) == null) {
+				return nextId;
 			}
+			if (nextId >= 999) {
+				print("* ERROR: You can't have more than 999 contacts!");
+			}
+			nextId ++;
 		}
-		
-		return highestId + 1;
+		return nextId;
 	}
 
 	static int getNextMeetingId() {
-		if (meetings.size() < 1) return 100;
-
-		int highestId = findMeeting(0).getId();
-
-		for (int i = 1; i < meetings.size() /*TODO not sure why i did this */; i++) {
-			if (findMeeting(i).getId() > highestId) {
-				highestId = findContact(i).getId();
+		int nextId = 100;
+		for (int i = 0; i < meetings.size(); i++) {
+			if (searchMeetings(nextId) == null) {
+				return nextId;
 			}
+			if (nextId >= 999) {
+				print("* ERROR: You can't have more than 999 meetings! (you must be very busy)");
+			}
+			nextId ++;
 		}
-		
-		return highestId + 1;
+		return nextId;
 	}
 	
 	static void setUi(Page page) {
 
 		switch (page) {
 			case HOME://main menu
-				print("Welcome to the Contacts Manager, what would you like to do?\n");
+				print("~ What would you like to do? ~\n");
 				//get input
 				checkInput(page);
 				break;
@@ -228,17 +230,24 @@ class Manager {
 				break;
 			case ADDC_2://add contact part 2
 				print("type any NOTES about this person:");
-				contacts.add(new Contact(getNextContactId(), tempName, readScreen()));
-				print("Contact '" + tempName + "' added!\n");
+				tempId = getNextContactId();
+				contacts.add(new Contact(tempId, tempName, readScreen()));
+				print("Contact '" + tempName + "' added! (id = " + tempId + ")\n");
 				setUi(Page.HOME);
 				break;
 			case EDITC_1://edit contact part 1
-				print("type the id of the contact you want to edit:");
-				tempId = Integer.parseInt(readScreen());
+				print("type the ID of the contact you want to edit:");
+				try {
+					tempId = Integer.parseInt(readScreen());
+				} catch (Exception e) {
+					System.out.println("Contact ID needs to be a number");
+					setUi(Page.HOME);
+					break;
+				}
 				if (searchContacts(tempId) == null) {
 					//make sure the contact exits, if not cancel operation
-					print("ERROR: Contact with id '" + tempId + "' does not exist\n");
-					setUi(Page.HOME);//TODO maybe just loop back
+					print("ERROR: Contact with ID '" + tempId + "' does not exist\n");
+					setUi(Page.HOME);
 					break;
 				}
 				setUi(Page.EDITC_2);
@@ -264,14 +273,14 @@ class Manager {
 				setUi(Page.HOME);
 				break;
 			case DELC:
-				print ("type the id of the contact you want to delete:");
+				print ("type the ID of the contact you want to delete:");
 				//get id
 				tempId = Integer.parseInt(readScreen());
 			
 				if (searchContacts(tempId) == null) {
 					//make sure the contact exits, if not cancel operation
-					print("ERROR: Contact with id '" + tempId + "' does not exist\n");
-					setUi(Page.HOME);//TODO maybe just loop back
+					print("Contact with ID '" + tempId + "' does not exist\n");
+					setUi(Page.HOME);
 					break;
 				}
 					
@@ -292,11 +301,7 @@ class Manager {
 				}
 				setUi(Page.HOME);
 				break;
-<<<<<<< HEAD
-			case LISTM://list c
-=======
 			case LISTM://list all meetings
->>>>>>> 828f6d3b8ad7e6ebfc8e154a9df9e0d7fe726bdd
 				if (meetings.size() > 0) {
 					print("LIST OF MEETINGS:\n");
 					for (int i = 0; i < meetings.size(); i ++) {
@@ -309,7 +314,7 @@ class Manager {
 				setUi(Page.HOME);
 				break;
 			case ADDM_1://add meeting part 11
-				print("type the DATE of the meeting (format = '" + Manager.dateFormatString + "') :");
+				print("type the DATE of the meeting (format = '" + Manager.dateFormatString + "'):");
 				tempDate = toDate(readScreen());
 				if (tempDate == null) {
 					setUi(Page.ADDM_1);
@@ -319,8 +324,9 @@ class Manager {
 				break;
 			case ADDM_2://add meeting part 2
 				print("type the NOTES about this meeting:");
-				meetings.add(new Meeting(getNextMeetingId(), tempDate, readScreen(), "000"));
-				print("Meeting on '" + tempDate.toString() + "' added!\n");
+				tempId = getNextMeetingId(); 
+				meetings.add(new Meeting(tempId, tempDate, readScreen(), "000"));
+				print("Meeting on '" + tempDate.toString() + "' added! (id = " + tempId + ")\n");
 				setUi(Page.HOME);
 				break;
 			case EDITM_1://edit c - 1
@@ -350,7 +356,7 @@ class Manager {
 				setUi(Page.HOME);
 				break;
 			case DELM:
-				print ("type the id of the meeting you want to delete:");
+				print ("type the ID of the meeting you want to delete:");
 				//get id
 				tempId = Integer.parseInt(readScreen());
 				//remove the meeting (this way around so the name can be printed before it was deleted)
@@ -359,7 +365,6 @@ class Manager {
 				setUi(Page.HOME);
 				break;
 			case FINDM://search for a contact
-				//TODO don't know how to implement
 				print("type the NOTES of the meeting you want to search for:");
 				String meetingSearchQuery = readScreen();
 				if (searchMeetings(meetingSearchQuery) == null) {
@@ -371,133 +376,141 @@ class Manager {
 				setUi(Page.HOME);
 				break;
 			case VIEWM:
-				print("type the id of the meeting you want to view:");
+				print("type the ID of the meeting you want to view:");
 				tempId = Integer.parseInt(readScreen());
-				if (searchMeetings(tempId).getFancyAttendeesString() == "000") {
+				
+				//using the ID get the meeting, then print attendees
+				if (searchMeetings(tempId) == null) {
+					print("* ERROR: No contact with ID '" + tempId + "' contact exists\n");
+					setUi(Page.HOME);
+					break;
+				}
+
+				if (searchMeetings(tempId).getAttendeesString() == "") {
 					print("No one is attending this meeting\n");
 				} else {
 					print("THE ATTENDEES ARE:\n");
+					print(searchMeetings(tempId).getFancyAttendeesString());
 				}
-				//using the id get the meeting, then print attendees
-				print(searchMeetings(tempId).getFancyAttendeesString());
 				setUi(Page.HOME);
 				break;
 			case ADDTOM_1:
-				print("type the id of the MEETING you want to add a contact to:");
+				print("type the ID of the MEETING you want to add a contact to:");
 				tempId = Integer.parseInt(readScreen());
 				if (searchMeetings(tempId) == null) {
-					print("A meeting with the id '" + tempId + "' does not exist");
+					print("A meeting with the ID '" + tempId + "' does not exist");
 					setUi(Page.HOME);
 					break;
 				}
 				setUi(Page.ADDTOM_2);
 				break;
 			case ADDTOM_2:
-				print("type the id of the contact you want to add to the meeting:");
+				print("type the ID of the contact you want to add to the meeting:");
 				tempAttendeeId = Integer.parseInt(readScreen());
 				if (searchContacts(tempAttendeeId) == null) {
-					print("A contact with the id '" + tempAttendeeId + "' does not exist");
+					print("A contact with the ID '" + tempAttendeeId + "' does not exist");
 					setUi(Page.HOME);
 					break;
 				}
+				//check if the ID is already attending the meeting TODO
 				//finally add the contact as an attendee to the meeting
 				searchMeetings(tempId).addAttendee(searchContacts(tempAttendeeId));	
 				setUi(Page.HOME);
 				break;
 			case DELFROMM_1:
-				print("type the id of the MEETING you want to remove a contact from:");
+				print("type the ID of the MEETING you want to remove a contact from:");
 				tempId = Integer.parseInt(readScreen());
 				if (searchMeetings(tempId) == null) {
-					print("A meeting with the id '" + tempId + "' does not exist");
+					print("A meeting with the ID '" + tempId + "' does not exist");
 					setUi(Page.DELFROMM_1);
 					break;
 				}
 				setUi(Page.DELFROMM_2);
 				break;
 			case DELFROMM_2:
-				print("type the id of the contact you want to remove from the meeting:");
+				print("type the ID of the contact you want to remove from the meeting:");
 				tempAttendeeId = Integer.parseInt(readScreen());
 				if (searchContacts(tempAttendeeId) == null) {
-					print("A contact with the id '" + tempAttendeeId + "' does not exist");
+					print("A contact with the ID '" + tempAttendeeId + "' does not exist");
 					setUi(Page.HOME);
 					break;
 				}
+				//test to see if that id even attends the meeting TODO
 				//finally remove the contact as an attendee to the meeting
 				searchMeetings(tempId).removeAttendee(searchContacts(tempAttendeeId));	
 				setUi(Page.HOME);
 				break;
 			default:
-				print("tried to go to a ui page that does not exist\n");
+				print("* ERROR: tried to go to a ui page that does not exist\n");
 				setUi(Page.HOME);
 				break;
 		}
 	}
 
 	static void checkInput(Page page) {
-		switch (page) {
+		print ("> ");//just looks cool
+
+		if (page == Page.HOME) {
 			/* all the commands you can enter from the main start page
 			 * basically just converts string inputs into page enums
 			 */
-			case HOME:
-				switch (readScreen()) {
-					case "list contacts": //list c
-						setUi(Page.LISTC);//list c
-						break;
-					case "add contact"://add c
-						setUi(Page.ADDC_1);//add c - 1
-						break;
-					case "edit contact"://edit c
-						setUi(Page.EDITC_1); //edit c - 1
-						break;
-					case "remove contact": case "delete contact":
-						setUi(Page.DELC); //edit c - 1
-						break;
-					case "find contact"://find c
-						setUi(Page.FINDC);
-						break;
-					case "list meetings"://list m
-						setUi(Page.LISTM);
-						break;
-					case "add meeting"://add m
-						setUi(Page.ADDM_1);
-						break;
-					case "edit meeting"://edit m
-						setUi(Page.EDITM_1);
-						break;
-					case "remove meeting": case "delete meeting":
-						setUi(Page.DELM);
-						break;
-					case "find meeting"://find m
-						setUi(Page.FINDM);
-						break;
-					case "view meeting"://view m
-						setUi(Page.VIEWM);
-						break;
-					case "add to meeting": case "add attendee":
-						setUi(Page.ADDTOM_1);
-						break;
-					case "remove from meeting": case "remove attendee":
-						setUi(Page.DELFROMM_1);
-						break;
-					case "help"://help - shows all commands (should really be in setUi but easyer to have it here)
-						print ("Here are all the commands:\n\n");
-						print ("list contacts\nadd contact\nedit contact\nremove contact\nfind contact\n\n");
-						print ("list meetings\nadd meeting\nedit meeting\nremove meeting\nfind meeting\nview meeting\nadd to meeting\nremove from meeting\n\n");
-						print ("quit\nhelp\n\n");
-						setUi (Page.HOME);
-						break;
-					case "quit"://quit
-						flush();
-						return;
-					default:
-						print("unknown command - type 'help' for a list of commands\n");
-						setUi(Page.HOME);
-						break;
-				}
-				break;
-			default:
-				print("application get input from a page that does not exist!\n");
-				break;
+			switch (readScreen().toLowerCase()) {
+				case "list contacts": //list c
+					setUi(Page.LISTC);//list c
+					break;
+				case "add contact"://add c
+					setUi(Page.ADDC_1);//add c - 1
+					break;
+				case "edit contact"://edit c
+					setUi(Page.EDITC_1); //edit c - 1
+					break;
+				case "remove contact": case "delete contact":
+					setUi(Page.DELC); //edit c - 1
+					break;
+				case "find contact"://find c
+					setUi(Page.FINDC);
+					break;
+				case "list meetings"://list m
+					setUi(Page.LISTM);
+					break;
+				case "add meeting"://add m
+					setUi(Page.ADDM_1);
+					break;
+				case "edit meeting"://edit m
+					setUi(Page.EDITM_1);
+					break;
+				case "remove meeting": case "delete meeting":
+					setUi(Page.DELM);
+					break;
+				case "find meeting"://find m
+					setUi(Page.FINDM);
+					break;
+				case "view meeting"://view m
+					setUi(Page.VIEWM);
+					break;
+				case "add to meeting": case "add attendee":
+					setUi(Page.ADDTOM_1);
+					break;
+				case "remove from meeting": case "remove attendee":
+					setUi(Page.DELFROMM_1);
+					break;
+				case "help"://help - shows all commands (should really be in setUi but easyer to have it here)
+					print ("Here are all the commands:\n\n");
+					print ("list contacts\nadd contact\nedit contact\nremove contact\nfind contact\n\n");
+					print ("list meetings\nadd meeting\nedit meeting\nremove meeting\nfind meeting\nview meeting\nadd to meeting\nremove from meeting\n\n");
+					print ("quit\nhelp\n\n");
+					setUi (Page.HOME);
+					break;
+				case "quit"://quit
+					flush();
+					return;
+				default:
+					print("unknown command - type 'help' for a list of commands\n");
+					setUi(Page.HOME);
+					break;
+			}
+		} else {
+			print("* ERROR: application get input from a page that does not exist!\n");
 		}
 	}
 }

@@ -75,7 +75,7 @@ class Meeting {
 	public String getAttendeesString() {
 		String str = "";
 		for (Contact contact : attendees) {
-			str = contact.getId() + "";
+			str += contact.getId() + "";
 		}
 		return str;
 	}

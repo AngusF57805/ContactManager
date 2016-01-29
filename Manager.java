@@ -165,15 +165,13 @@ class Manager {
 
 	//TODO
 	static Meeting searchMeetings(String notes) {
-		//search meetings for Notes? TODO no idea how to implement
+		//search meetings for Notes
 		for (Meeting meeting : meetings) {
 			if (meeting.getNotes().toLowerCase().equals(notes.toLowerCase())) {
-				//result.concat(meeting);
 				return meeting;
 			}
 		}
 		return null;
-		//return result; //TODO ditto + multiple contacts return
 	}
 
 	static int getNextContactId() {
@@ -328,8 +326,11 @@ class Manager {
 				break;
 			case EDITM_2://edit c - 2
 				print("type the new DATE of the meeting (leave blank to not change):");
-				String oldTempDate = readScreen();
-				tempDate = new Date();//TODO
+				tempDate = toDate(readScreen());
+				if (tempDate == null) {
+					setUi(Page.EDITM_2);
+					break;
+				}
 				setUi(Page.EDITM_3);
 				break;
 			case EDITM_3://edit c - 3
@@ -339,7 +340,7 @@ class Manager {
 					//dont change the notes if user input is blank
 					tempNotes = searchMeetings(tempId).getNotes();
 				}
-				meetings.add(new Meeting(tempId, new Date()/*TODO*/, tempNotes, "000"));
+				meetings.add(new Meeting(tempId, tempDate, tempNotes, "000"));
 				print("Meeting on '" + tempDate + "' edited.\n");
 				meetings.remove(searchMeetings(tempId));
 				setUi(Page.HOME);
@@ -354,16 +355,22 @@ class Manager {
 				setUi(Page.HOME);
 				break;
 			case FINDM://search for a contact
-				//TODO dont know how to implment
+				//TODO don't know how to implement
 				print("type the NOTES of the meeting you want to search for:");
-				print(searchContacts(readScreen()).toFancyString() +"\n");
+				String meetingSearchQuery = readScreen();
+				if (searchMeetings(meetingSearchQuery) == null) {
+					print("Sorry, no meeting with name '" + meetingSearchQuery + "' was found\n");
+				}
+				else {
+					print(searchMeetings(meetingSearchQuery).toFancyString() +"\n");
+				}
 				setUi(Page.HOME);
 				break;
 			case VIEWM:
 				print("type the id of the meeting you want to view:");
 				tempId = Integer.parseInt(readScreen());
 				if (searchMeetings(tempId).getFancyAttendeesString() == "000") {
-					print("No-one is attending this meeting\n");
+					print("No one is attending this meeting\n");
 				} else {
 					print("THE ATTENDEES ARE:\n");
 				}
@@ -485,7 +492,7 @@ class Manager {
 				}
 				break;
 			default:
-				print("appliacation get input from a page that does not exist!\n");
+				print("application get input from a page that does not exist!\n");
 				break;
 		}
 	}

@@ -3,6 +3,7 @@ package ContactManager;
 import java.util.Date;
 //import java.util.Set; //is this all i need?
 import java.util.*;
+import java.text.SimpleDateFormat;
 
 class Meeting {
 
@@ -10,6 +11,8 @@ class Meeting {
 	private Date date;
 	private String notes;
 	private Set<Contact> attendees;
+
+	SimpleDateFormat sdf = new SimpleDateFormat(Manager.dateFormatString, Locale.UK);
 
 	public Meeting(int id, Date date, String notes, String attendeesString) {
 		//there is no way to put contacts in a meeting via the constructor
@@ -19,8 +22,8 @@ class Meeting {
 		//turn string of attendees into a hashset of contacts
 		attendees = new HashSet<Contact>();
 		for (int i = 0; i < attendeesString.length(); i += 3) {
-			if (Manager.searchContacts(Integer.parseInt(attendeesString.substring(i,3))) != null) {
-				attendees.add(Manager.searchContacts(Integer.parseInt(attendeesString.substring(i,3))));
+			if (Manager.searchContacts(Integer.parseInt(attendeesString.substring(i,i + 3))) != null) {
+				attendees.add(Manager.searchContacts(Integer.parseInt(attendeesString.substring(i,i + 3))));
 			}
 		}
 	}
@@ -49,20 +52,20 @@ class Meeting {
 		this.notes = notes;
 	}
 
-	public void setAttendees(Set<Contact> attendees) {
-		this.attendees = attendees;
-	}
-
-	public void addAttendees(Contact contact) {
+	public void addAttendee(Contact contact) {
 		attendees.add(contact);
 	}
 
+	public void removeAttendee(Contact contact) {
+		attendees.remove(contact);
+	}
+
 	public String toString() { //overrides deafult .toString
-		return id + "\n" + date.toString() + "\n" + notes; //TODO AGGGGHHH
+		return id + "\n" + sdf.format(date) + "\n" + notes + "\n" + getAttendeesString();
 	}
 
 	public String toFancyString() { //more ui friendly
-		return "- " + id +  " : " + date.toString() + " : " + notes; //TODO WHAT DO I DO TO SHOW ATTENDEES
+		return "- " + id +  " : " + sdf.format(date) + " : " + notes;
 	}
 
 	public String getAttendeesString() {
@@ -71,13 +74,12 @@ class Meeting {
 			str = contact.getId() + "";
 		}
 		return str;
- 
 	}
 
 	public String getFancyAttendeesString() {
-		String str = "THE ATTENDEES ARE:\n";
+		String str = "";
 		for (Contact contact : attendees) {
-			str = contact.toFancyString() + "\n";
+			str += contact.toFancyString() + "\n";
 		}
 		return str;
 	}

@@ -61,7 +61,11 @@ class Meeting {
 	}
 
 	public String toString() { //overrides deafult .toString
-		return id + "\n" + sdf.format(date) + "\n" + notes + "\n" + getAttendeesString();
+		String a = getAttendeesString();
+		if (a.equals("")) {
+			a = "000";
+		}
+		return id + "\n" + sdf.format(date) + "\n" + notes + "\n" + a;
 	}
 
 	public String toFancyString() { //more ui friendly

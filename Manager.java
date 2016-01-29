@@ -292,7 +292,11 @@ class Manager {
 				}
 				setUi(Page.HOME);
 				break;
+<<<<<<< HEAD
+			case LISTM://list c
+=======
 			case LISTM://list all meetings
+>>>>>>> 828f6d3b8ad7e6ebfc8e154a9df9e0d7fe726bdd
 				if (meetings.size() > 0) {
 					print("LIST OF MEETINGS:\n");
 					for (int i = 0; i < meetings.size(); i ++) {
